@@ -1,73 +1,74 @@
-library IEEE;
-use IEEE.STD_LOGIC_1164.all;
-use IEEE.STD_LOGIC_UNSIGNED.all;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_signed.all;
 use ieee.numeric_std.all;
 
--- define the interface between the ALU and its external environment
-ENTITY ALU IS
-	PORT (
-		a, b			: IN std_logic_vector(31 downto 0);
-		ALUcontrol	: IN std_logic_vector(3 downto 0);
-		result		: OUT std_logic_vector(31 downto 0);
-		zero			: OUT std_logic
+-- define the interface between the alu and its external environment
+entity alu is
+	port (
+		operand1, operand2		: in std_logic_vector(31 downto 0);
+		alu_control	: in std_logic_vector(3 downto 0);
+		result		: out std_logic_vector(31 downto 0);
+		zero		: out std_logic := '0'
 	);
-END ALU;
+end alu;
 
--- define the internal organisation and operation of the ALU
-ARCHITECTURE behaviour OF ALU IS
+-- define the internal organisation and operation of the alu
+architecture behaviour of alu is
 	-- architecture declarations
-	SIGNAL shamt		: natural;
-	SIGNAL ALUresult	: std_logic_vector(31 downto 0);
+	signal shamt		: std_logic_vector(4 downto 0);
+	signal aluresult	: std_logic_vector(31 downto 0);
 
-	-- concurrent statements
-	BEGIN
-		shamt <= conv_integer(b(4 downto 0));
-		result <= ALUresult;
-		zero <= '1' WHEN ALUresult = (31 downto 0 => '0') ELSE '0';
-		
-		PROCESS (ALUcontrol, a, b) BEGIN
-			CASE ALUcontrol IS
-				-- SLT
-				WHEN "0001" => 
-					IF a < b THEN
-						ALUresult <= (31 downto 1 => '0') & '1';
-					ELSE
-						ALUresult <= (others => '0');
-					END IF;
-				-- SLTU
-				WHEN "0010" => 
-					IF a < b THEN
-						ALUresult <= (31 downto 1 => '0') & '1';
-					ELSE
-						ALUresult <= (others => '0');
-					END IF;
-				-- AND
-				WHEN "0011" => 
-					ALUresult <= a and b;
-				-- OR
-				WHEN "0100" => 
-					ALUresult <= a or b;
-				-- XOR
-				WHEN "0101" => 
-					ALUresult <= a xor b;
-				-- SLL
-				WHEN "0110" => 
-					ALUresult <= std_logic_vector(shift_left(unsigned(a), shamt));
-				-- SRL
-				WHEN "0111" => 
-					ALUresult <= std_logic_vector(shift_right(unsigned(a), shamt));
-				-- SRA
-				WHEN "1000" =>
-					ALUresult <= std_logic_vector(shift_left(signed(a), shamt));
-				-- SUB
-				WHEN "1001" =>
-					ALUresult <= a - b;
-				-- PASS
-				WHEN "1010" => 
-					ALUresult <= b;
-				-- ADD
-				WHEN others => 
-					ALUresult <= a + b;
-			END CASE;
-		END PROCESS;
-END behaviour;
+-- concurrent statements
+begin
+	shamt <= operand2(4 downto 0);
+	result <= aluresult;
+	zero <= '1' when aluresult = (31 downto 0 => '0') else '0';
+	
+	process (alu_control, operand1, operand2, shamt)
+	begin
+		case alu_control is
+			-- slt
+			when "0001" => 
+				if operand1 < operand2 then
+					aluresult <= (31 downto 1 => '0') & '1';
+				else
+					aluresult <= (others => '0');
+				end if;
+			-- sltu
+			when "0010" => 
+				if unsigned(operand1) < unsigned(operand2) then
+					aluresult <= (31 downto 1 => '0') & '1';
+				else
+					aluresult <= (others => '0');
+				end if;
+			-- and
+			when "0011" => 
+				aluresult <= operand1 and operand2;
+			-- or
+			when "0100" => 
+				aluresult <= operand1 or operand2;
+			-- xor
+			when "0101" => 
+				aluresult <= operand1 xor operand2;
+			-- sll
+			when "0110" => 
+				aluresult <= std_logic_vector(shift_left(unsigned(operand1), conv_integer(shamt)));
+			-- srl
+			when "0111" => 
+				aluresult <= std_logic_vector(shift_right(unsigned(operand1), conv_integer(shamt)));
+			-- sra
+			when "1000" =>
+				aluresult <= std_logic_vector(shift_right(signed(operand1), conv_integer(shamt)));
+			-- sub
+			when "1001" =>
+				aluresult <= operand1 - operand2;
+			-- pass
+			when "1010" => 
+				aluresult <= operand2;
+			-- add
+			when others => 
+				aluresult <= operand1 + operand2;
+		end case;
+	end process;
+end behaviour;
