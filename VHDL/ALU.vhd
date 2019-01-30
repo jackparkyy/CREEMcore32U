@@ -53,13 +53,13 @@ begin
 				aluresult <= operand1 xor operand2;
 			-- sll
 			when "0110" => 
-				aluresult <= std_logic_vector(shift_left(unsigned(operand1), conv_integer(shamt)));
+				aluresult <= std_logic_vector(shift_left(unsigned(operand1), to_integer(unsigned(shamt))));
 			-- srl
 			when "0111" => 
-				aluresult <= std_logic_vector(shift_right(unsigned(operand1), conv_integer(shamt)));
+				aluresult <= std_logic_vector(shift_right(unsigned(operand1), to_integer(unsigned(shamt))));
 			-- sra
 			when "1000" =>
-				aluresult <= std_logic_vector(shift_right(signed(operand1), conv_integer(shamt)));
+				aluresult <= std_logic_vector(shift_right(signed(operand1), to_integer(unsigned(shamt))));
 			-- sub
 			when "1001" =>
 				aluresult <= operand1 - operand2;
