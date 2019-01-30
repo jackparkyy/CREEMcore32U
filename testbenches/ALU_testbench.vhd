@@ -128,16 +128,71 @@ begin
 			test(operation, value1, value2, expected);
 		end procedure test_pass;
 	begin
+		test_add(0, 0, 0);
 		test_add(10, 10, 20);
-		test_slt(3, 4, 1);
-		test_sltu(4, 3, 0);
+		test_add(-10, -10, -20);
+		test_add(-10, 10, 0);
+		test_add(2147483647, -2147483648, -1);
+		test_add(-2147483648, -1, 2147483647); -- overflow
+		test_add(2147483647, 1, -2147483648); -- overflow
+
+		test_slt(-1, 0, 1);
+		test_slt(0, -1, 0);
+		test_slt(-2147483648, 2147483647, 1);
+		test_slt(2147483647, -2147483648, 0);
+		test_slt(0, 0, 0);
+
+		test_sltu(-1, 0, 0);
+		test_sltu(0, -1, 1);
+		test_sltu(-2147483648, 2147483647, 0);
+		test_sltu(2147483647, -2147483648, 1);
+		test_sltu(0, 0, 0);
+
 		test_and(9, 13, 9);
+		test_and(-1, -1, -1); -- all 1's
+		test_and(0, 0, 0); -- all 0's
+		test_and(-1, 0, 0);
+		test_and(0, -1, 0);
+
 		test_or(9, 13, 13);
+		test_or(-1, -1, -1); -- all 1's
+		test_or(0, 0, 0); -- all 0's
+		test_or(-1, 0, -1);
+		test_or(0, -1, -1);
+
 		test_xor(9, 13, 4);
-		test_sll(1, 2, 4);
-		test_srl(5, 2 ,1);
-		test_sra(5, 2, 1);
-		test_sub(-13, -13, 0);
+		test_xor(-1, -1, 0);
+		test_xor(0, 0, 0);
+		test_xor(-1, 0, -1);
+		test_xor(0, -1, -1);
+
+		test_sll(5, 10, 5120);
+		test_sll(-1, -1, -2147483648);
+		test_sll(-1, 31, -2147483648);
+		test_sll(0, 0, 0);
+		test_sll(1431655765, 1, -1431655766);
+
+		test_srl(-65538, 15, 131069);
+		test_srl(-1, -1, 1);
+		test_srl(-1, 31, 1);
+		test_srl(0, 0, 0);
+		test_srl(-1431655766, 1, 1431655765);
+
+		test_sra(-1431655766, 1, -715827883);
+		test_sra(-1, -1, -1);
+		test_sra(-1, 31, -1);
+		test_sra(0, 0, 0);
+		test_sra(-715827883, 1, -357913942);
+
+		test_sub(0, 0, 0);
+		test_sub(10, 10, 0);
+		test_sub(-10, -10, 0);
+		test_sub(-10, 10, -20);
+		test_sub(-2147483648, -2147483648, 0);
+		test_sub(2147483647, 2147483647, 0);
+		test_sub(2147483647, -1, -2147483648); -- overflow
+		test_sub(-2147483648, 1, 2147483647); -- overflow
+
 		test_pass(-100, 8, 8);
 		wait;
 	end process simulation;
