@@ -21,7 +21,7 @@ architecture behaviour of alu_testbench is
 -- concurrent statements
 begin
 	-- instantiate alu
-	alu : entity work.alu
+	u32_alu : entity work.u32_alu
 	port map (
 		operand1 => operand1,
 		operand2 => operand2,
