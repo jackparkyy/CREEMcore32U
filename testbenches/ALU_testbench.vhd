@@ -30,8 +30,13 @@ begin
 		zero => zero
 	);
 	
-	simulation : process
-		procedure test(constant operation : in string; constant value1 : in integer; constant value2 : in integer; constant expected : in integer) is
+	process
+		procedure test(
+			constant operation : in string;
+			constant value1 : in integer;
+			constant value2 : in integer;
+			constant expected : in integer
+		) is
 			variable res : integer;
 		begin
 			-- assign values to circuit inputs
@@ -51,77 +56,121 @@ begin
 			severity error;
 		end procedure test;
 
-		procedure test_add(constant value1 : in integer; constant value2 : in integer; constant expected : in integer) is
+		procedure test_add(
+			constant value1 : in integer;
+			constant value2 : in integer;
+			constant expected : in integer
+		) is
 			constant operation : string := "ADD";	
 		begin
 			alu_control <= "0000";
 			test(operation, value1, value2, expected);
 		end procedure test_add;
 
-		procedure test_slt(constant value1 : in integer; constant value2 : in integer; constant expected : in integer) is
+		procedure test_slt(
+			constant value1 : in integer;
+			constant value2 : in integer;
+			constant expected : in integer
+		) is
 			constant operation : string := "SLT";	
 		begin
 			alu_control <= "0001";
 			test(operation, value1, value2, expected);
 		end procedure test_slt;
 		
-		procedure test_sltu(constant value1 : in integer; constant value2 : in integer; constant expected : in integer) is
+		procedure test_sltu(
+			constant value1 : in integer;
+			constant value2 : in integer;
+			constant expected : in integer
+		) is
 			constant operation : string := "SLTU";	
 		begin
 			alu_control <= "0010";
 			test(operation, value1, value2, expected);
 		end procedure test_sltu;
 
-		procedure test_and(constant value1 : in integer; constant value2 : in integer; constant expected : in integer) is
+		procedure test_and(
+			constant value1 : in integer;
+			constant value2 : in integer;
+			constant expected : in integer
+		) is
 			constant operation : string := "AND";	
 		begin
 			alu_control <= "0011";
 			test(operation, value1, value2, expected);
 		end procedure test_and;
 
-		procedure test_or(constant value1 : in integer; constant value2 : in integer; constant expected : in integer) is
+		procedure test_or(
+			constant value1 : in integer;
+			constant value2 : in integer;
+			constant expected : in integer
+		) is
 			constant operation : string := "OR";	
 		begin
 			alu_control <= "0100";
 			test(operation, value1, value2, expected);
 		end procedure test_or;
 
-		procedure test_xor(constant value1 : in integer; constant value2 : in integer; constant expected : in integer) is
+		procedure test_xor(
+			constant value1 : in integer;
+			constant value2 : in integer;
+			constant expected : in integer
+		) is
 			constant operation : string := "XOR";	
 		begin
 			alu_control <= "0101";
 			test(operation, value1, value2, expected);
 		end procedure test_xor;
 
-		procedure test_sll(constant value1 : in integer; constant value2 : in integer; constant expected : in integer) is
+		procedure test_sll(
+			constant value1 : in integer;
+			constant value2 : in integer;
+			constant expected : in integer
+		) is
 			constant operation : string := "SLL";	
 		begin
 			alu_control <= "0110";
 			test(operation, value1, value2, expected);
 		end procedure test_sll;
 
-		procedure test_srl(constant value1 : in integer; constant value2 : in integer; constant expected : in integer) is
+		procedure test_srl(
+			constant value1 : in integer;
+			constant value2 : in integer;
+			constant expected : in integer
+		) is
 			constant operation : string := "SRL";	
 		begin
 			alu_control <= "0111";
 			test(operation, value1, value2, expected);
 		end procedure test_srl;
 
-		procedure test_sra(constant value1 : in integer; constant value2 : in integer; constant expected : in integer) is
+		procedure test_sra(
+			constant value1 : in integer;
+			constant value2 : in integer;
+			constant expected : in integer
+		) is
 			constant operation : string := "SRA";	
 		begin
 			alu_control <= "1000";
 			test(operation, value1, value2, expected);
 		end procedure test_sra;
 
-		procedure test_sub(constant value1 : in integer; constant value2 : in integer; constant expected : in integer) is
+		procedure test_sub(
+			constant value1 : in integer;
+			constant value2 : in integer;
+			constant expected : in integer
+		) is
 			constant operation : string := "SUB";	
 		begin
 			alu_control <= "1001";
 			test(operation, value1, value2, expected);
 		end procedure test_sub;
 
-		procedure test_pass(constant value1 : in integer; constant value2 : in integer; constant expected : in integer) is
+		procedure test_pass(
+			constant value1 : in integer;
+			constant value2 : in integer;
+			constant expected : in integer
+		) is
 			constant operation : string := "PASS";	
 		begin
 			alu_control <= "1010";
@@ -195,5 +244,5 @@ begin
 
 		test_pass(-100, 8, 8);
 		wait;
-	end process simulation;
+	end process;
 end behaviour;
