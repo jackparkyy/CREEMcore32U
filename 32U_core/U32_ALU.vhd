@@ -24,20 +24,20 @@ architecture behaviour of u32_alu is
 begin
 	shamt <= operand2(4 downto 0);
 	result <= aluresult;
-	zero <= '1' when aluresult = (31 downto 0 => '0') else '0';
+	zero <= '1' when aluresult = (xlen downto 0 => '0') else '0';
 	
 	process (alu_control, operand1, operand2, shamt)
 	begin
 		case alu_control is
 			when alu_slt => 
 				if operand1 < operand2 then
-					aluresult <= (31 downto 1 => '0') & '1';
+					aluresult <= (xlen downto 1 => '0') & '1';
 				else
 					aluresult <= (others => '0');
 				end if;
 			when alu_sltu => 
 				if unsigned(operand1) < unsigned(operand2) then
-					aluresult <= (31 downto 1 => '0') & '1';
+					aluresult <= (xlen downto 1 => '0') & '1';
 				else
 					aluresult <= (others => '0');
 				end if;

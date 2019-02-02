@@ -17,9 +17,9 @@ begin
     opcode <= inst(6 downto 2); -- isolate opcode from instrcution
     
     with opcode select 
-    imm <=  inst(31 downto 12) & (11 downto 0 => '0')                                               when lui | auipc, -- U-type
-            (31 downto 20 => inst(31)) & inst(19 downto 12) & inst(20) & inst(30 downto 21) & '0'   when jal, -- J-type
-            (31 downto 12 => inst(31)) & inst(7) & inst(30 downto 25) & inst(11 downto 8) & '0'     when branch, -- B-type
-            (31 downto 11 => inst(31)) & inst(30 downto 25) & inst(11 downto 7)                     when store, -- S-type
-            (31 downto 11 => inst(31)) & inst(30 downto 20)                                         when others; -- I-type
+    imm <=  inst(xlen downto 12) & (11 downto 0 => '0')                                               when lui | auipc, -- U-type
+            (xlen downto 20 => inst(xlen)) & inst(19 downto 12) & inst(20) & inst(30 downto 21) & '0'   when jal, -- J-type
+            (xlen downto 12 => inst(xlen)) & inst(7) & inst(30 downto 25) & inst(11 downto 8) & '0'     when branch, -- B-type
+            (xlen downto 11 => inst(xlen)) & inst(30 downto 25) & inst(11 downto 7)                     when store, -- S-type
+            (xlen downto 11 => inst(xlen)) & inst(30 downto 20)                                         when others; -- I-type
 end behaviour;
