@@ -10,13 +10,12 @@ end alu_testbench;
 -- define the internal organisation and operation of the alu
 architecture behaviour of alu_testbench is
 	-- architecture declarations
-	constant xlen			: natural := 31;
 	constant time_delta	: time := 100 ns;
 	
-	signal operand1, operand2		: std_logic_vector(xlen downto 0);
-	signal alu_control		: std_logic_vector(3 downto 0);
-	signal result			: std_logic_vector(xlen downto 0);
-	signal zero			: std_logic;
+	signal operand1, operand2		: std_logic_vector(31 downto 0) := (others => '0');
+	signal alu_control		: std_logic_vector(3 downto 0) := (others => '0');
+	signal result			: std_logic_vector(31 downto 0) := (others => '0');
+	signal zero			: std_logic := '0';
 
 -- concurrent statements
 begin

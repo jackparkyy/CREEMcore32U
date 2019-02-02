@@ -5,14 +5,14 @@ use work.u32_types.all;
 -- define the interface between the immediate decoder and its external environment
 entity u32_immediate_decoder is
 	port (
-		inst    : in inst_vector;
-		imm	    : out word_vector
+		inst    : in inst_vector := (others => '0');
+		imm	    : out word_vector := (others => '0')
 	);
 end u32_immediate_decoder;
 
 -- define the internal organisation and operation of the immediate decoder
 architecture behaviour of u32_immediate_decoder is
-    signal opcode : opcode_vector;
+    signal opcode : opcode_vector := (others => '0');
 begin
     opcode <= inst(6 downto 2); -- isolate opcode from instrcution
     

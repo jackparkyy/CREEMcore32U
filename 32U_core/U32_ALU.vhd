@@ -7,18 +7,18 @@ use work.u32_types.all;
 -- define the interface between the alu and its external environment
 entity u32_alu is
 	port (
-		operand1, operand2		: in word_vector;
-		alu_control	: in nibble_vector;
-		result		: out word_vector;
-		zero		: out std_logic
+		operand1, operand2		: in word_vector := (others => '0');
+		alu_control	: in nibble_vector := (others => '0');
+		result		: out word_vector := (others => '0');
+		zero		: out std_logic := '0'
 	);
 end u32_alu;
 
 -- define the internal organisation and operation of the alu
 architecture behaviour of u32_alu is
 	-- architecture declarations
-	signal shamt		: std_logic_vector(4 downto 0);
-	signal aluresult	: word_vector;
+	signal shamt		: std_logic_vector(4 downto 0) := (others => '0');
+	signal aluresult	: word_vector := (others => '0');
 
 -- concurrent statements
 begin

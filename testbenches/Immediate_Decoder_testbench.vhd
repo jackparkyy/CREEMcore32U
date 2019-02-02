@@ -11,8 +11,8 @@ architecture behaviour of immediate_decoder_testbench is
 	-- architecture declarations
 	constant time_delta	: time := 100 ns;
 	
-	signal inst		: std_logic_vector(31 downto 2);
-	signal imm		: std_logic_vector(31 downto 0);
+	signal inst		: std_logic_vector(31 downto 2) := (others => '0');
+	signal imm		: std_logic_vector(31 downto 0) := (others => '0');
 
 -- concurrent statements
 begin
