@@ -12,10 +12,10 @@ architecture behaviour of alu_testbench is
 	-- architecture declarations
 	constant time_delta	: time := 100 ns;
 	
-	signal operand1, operand2		: std_logic_vector(31 downto 0) := (others => '0');
-	signal alu_control		: std_logic_vector(3 downto 0) := (others => '0');
-	signal result			: std_logic_vector(31 downto 0) := (others => '0');
-	signal zero			: std_logic := '0';
+	signal operand1, operand2	: std_logic_vector(31 downto 0) := (others => '0');
+	signal alu_control			: std_logic_vector(3 downto 0) := (others => '0');
+	signal result				: std_logic_vector(31 downto 0) := (others => '0');
+	signal zero					: std_logic := '0';
 
 -- concurrent statements
 begin
@@ -31,10 +31,10 @@ begin
 	
 	process
 		procedure test(
-			constant operation : in string;
-			constant value1 : in integer;
-			constant value2 : in integer;
-			constant expected : in integer
+			constant operation 	: in string;
+			constant value1 	: in integer;
+			constant value2 	: in integer;
+			constant expected 	: in integer
 		) is
 			variable res : integer;
 		begin
@@ -56,9 +56,9 @@ begin
 		end procedure test;
 
 		procedure test_add(
-			constant value1 : in integer;
-			constant value2 : in integer;
-			constant expected : in integer
+			constant value1 	: in integer;
+			constant value2 	: in integer;
+			constant expected 	: in integer
 		) is
 			constant operation : string := "ADD";	
 		begin
@@ -67,9 +67,9 @@ begin
 		end procedure test_add;
 
 		procedure test_slt(
-			constant value1 : in integer;
-			constant value2 : in integer;
-			constant expected : in integer
+			constant value1 	: in integer;
+			constant value2 	: in integer;
+			constant expected 	: in integer
 		) is
 			constant operation : string := "SLT";	
 		begin
@@ -78,9 +78,9 @@ begin
 		end procedure test_slt;
 		
 		procedure test_sltu(
-			constant value1 : in integer;
-			constant value2 : in integer;
-			constant expected : in integer
+			constant value1 	: in integer;
+			constant value2 	: in integer;
+			constant expected 	: in integer
 		) is
 			constant operation : string := "SLTU";	
 		begin
@@ -89,9 +89,9 @@ begin
 		end procedure test_sltu;
 
 		procedure test_and(
-			constant value1 : in integer;
-			constant value2 : in integer;
-			constant expected : in integer
+			constant value1 	: in integer;
+			constant value2 	: in integer;
+			constant expected 	: in integer
 		) is
 			constant operation : string := "AND";	
 		begin
@@ -100,9 +100,9 @@ begin
 		end procedure test_and;
 
 		procedure test_or(
-			constant value1 : in integer;
-			constant value2 : in integer;
-			constant expected : in integer
+			constant value1 	: in integer;
+			constant value2 	: in integer;
+			constant expected 	: in integer
 		) is
 			constant operation : string := "OR";	
 		begin
@@ -111,9 +111,9 @@ begin
 		end procedure test_or;
 
 		procedure test_xor(
-			constant value1 : in integer;
-			constant value2 : in integer;
-			constant expected : in integer
+			constant value1 	: in integer;
+			constant value2 	: in integer;
+			constant expected 	: in integer
 		) is
 			constant operation : string := "XOR";	
 		begin
@@ -122,9 +122,9 @@ begin
 		end procedure test_xor;
 
 		procedure test_sll(
-			constant value1 : in integer;
-			constant value2 : in integer;
-			constant expected : in integer
+			constant value1 	: in integer;
+			constant value2 	: in integer;
+			constant expected 	: in integer
 		) is
 			constant operation : string := "SLL";	
 		begin
@@ -133,9 +133,9 @@ begin
 		end procedure test_sll;
 
 		procedure test_srl(
-			constant value1 : in integer;
-			constant value2 : in integer;
-			constant expected : in integer
+			constant value1 	: in integer;
+			constant value2 	: in integer;
+			constant expected 	: in integer
 		) is
 			constant operation : string := "SRL";	
 		begin
@@ -144,9 +144,9 @@ begin
 		end procedure test_srl;
 
 		procedure test_sra(
-			constant value1 : in integer;
-			constant value2 : in integer;
-			constant expected : in integer
+			constant value1 	: in integer;
+			constant value2 	: in integer;
+			constant expected 	: in integer
 		) is
 			constant operation : string := "SRA";	
 		begin
@@ -155,9 +155,9 @@ begin
 		end procedure test_sra;
 
 		procedure test_sub(
-			constant value1 : in integer;
-			constant value2 : in integer;
-			constant expected : in integer
+			constant value1 	: in integer;
+			constant value2 	: in integer;
+			constant expected 	: in integer
 		) is
 			constant operation : string := "SUB";	
 		begin
@@ -166,9 +166,9 @@ begin
 		end procedure test_sub;
 
 		procedure test_pass(
-			constant value1 : in integer;
-			constant value2 : in integer;
-			constant expected : in integer
+			constant value1 	: in integer;
+			constant value2 	: in integer;
+			constant expected 	: in integer
 		) is
 			constant operation : string := "PASS";	
 		begin

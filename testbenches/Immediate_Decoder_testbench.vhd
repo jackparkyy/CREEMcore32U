@@ -25,10 +25,10 @@ begin
 	
 	process
 		procedure test(
-			constant inst_type : in string;
-			constant opcode : std_logic_vector(6 downto 2);
-			constant instruction : in std_logic_vector(31 downto 2);
-			constant expected : in integer
+			constant inst_type 		: in string;
+			constant opcode 		: in std_logic_vector(6 downto 2);
+			constant instruction 	: in std_logic_vector(31 downto 2);
+			constant expected 		: in integer
 		) is
 			variable res : integer;
 		begin
@@ -49,8 +49,8 @@ begin
 		end procedure test;
 
 		procedure test_itype(
-			constant immediate : in std_logic_vector(31 downto 20);
-			constant expected : in integer
+			constant immediate 	: in std_logic_vector(31 downto 20);
+			constant expected 	: in integer
 		) is
 			constant inst_type 	: string := "i";
 			variable opcode 	: std_logic_vector(6 downto 2);
@@ -68,8 +68,8 @@ begin
 		end procedure test_itype;
 
 		procedure test_utype(
-			constant immediate : in std_logic_vector(31 downto 12);
-			constant expected : in std_logic_vector(31 downto 0)
+			constant immediate 	: in std_logic_vector(31 downto 12);
+			constant expected 	: in std_logic_vector(31 downto 0)
 		) is
 			constant inst_type 	: string := "u";
 			variable opcode 	: std_logic_vector(6 downto 2);
@@ -84,8 +84,8 @@ begin
 		end procedure test_utype;
 
 		procedure test_jtype(
-			constant immediate : in std_logic_vector(31 downto 12);
-			constant expected : in std_logic_vector(31 downto 0)
+			constant immediate 	: in std_logic_vector(31 downto 12);
+			constant expected 	: in std_logic_vector(31 downto 0)
 		) is
 			constant inst_type 	: string := "j";
 			variable opcode 	: std_logic_vector(6 downto 2);
@@ -97,8 +97,8 @@ begin
 		end procedure test_jtype;
 
 		procedure test_btype(
-			constant immediate : in std_logic_vector(11 downto 0);
-			constant expected : in std_logic_vector(31 downto 0)
+			constant immediate 	: in std_logic_vector(11 downto 0);
+			constant expected 	: in std_logic_vector(31 downto 0)
 		) is
 			constant inst_type 	: string := "b";
 			variable opcode 	: std_logic_vector(6 downto 2);
@@ -110,8 +110,8 @@ begin
 		end procedure test_btype;
 
 		procedure test_stype(
-			constant immediate : in std_logic_vector(11 downto 0);
-			constant expected : in integer
+			constant immediate 	: in std_logic_vector(11 downto 0);
+			constant expected 	: in integer
 		) is
 			constant inst_type 	: string := "s";
 			variable opcode 	: std_logic_vector(6 downto 2);
