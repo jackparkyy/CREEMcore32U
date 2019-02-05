@@ -1,0 +1,31 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use work.u32_types.all;
+
+entity u32_gp_registers is
+    port(
+        clk, reg_write              : in std_logic := '0';
+        rs1_addr, rs2_addr, rd_addr : in std_logic_vector(4 downto 0) := (others => '0');
+        rd_data                     : in word_vector := (others => '0');
+        rs1_data, rs2_data          : out word_vector := (others => '0')
+    );
+end u32_gp_registers;
+
+-- define the internal organisation and operation of the general purpose registers
+architecture behaviour of u32_gp_registers is
+    type word_matrix is array (0 to 31) of word_vector;
+    signal gp_registers : word_matrix := (others => (others => '0'));
+begin
+    -- concurrent statements
+    rs1_data <= gp_registers(to_integer(unsigned(rs1_addr)));
+    rs2_data <= gp_registers(to_integer(unsigned(rs2_addr)));
+
+    -- sequential statements
+    process begin
+        wait until rising_edge(clk);
+        if (reg_write = '1' and rd_addr /= "00000") then
+            gp_registers(to_integer(unsigned(rd_addr))) <= rd_data;
+        end if;
+    end process;
+end behaviour;
