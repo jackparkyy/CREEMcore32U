@@ -6,7 +6,7 @@ use work.u32_types.all;
 entity u32_gp_registers is
     port(
         clk, reg_write              : in std_logic := '0';
-        rs1_addr, rs2_addr, rd_addr : in std_logic_vector(4 downto 0) := (others => '0');
+        rs1_addr, rs2_addr, rd_addr : in opcode_vector := (others => '0');
         rd_data                     : in word_vector := (others => '0');
         rs1_data, rs2_data          : out word_vector := (others => '0')
     );

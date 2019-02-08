@@ -16,15 +16,15 @@ package u32_types is
     constant suffix : std_logic_vector(1 downto 0) := "11";
 
     -- opcodes reduced down from 7 bits to 5 by excluding the architectures suffix
-    constant lui    : std_logic_vector(4 downto 0) := "01101";
-    constant auipc  : std_logic_vector(4 downto 0) := "00101";
-    constant opimm  : std_logic_vector(4 downto 0) := "00100";
-    constant op     : std_logic_vector(4 downto 0) := "01100";
-    constant jal    : std_logic_vector(4 downto 0) := "11011";
-    constant jalr   : std_logic_vector(4 downto 0) := "11001";
-    constant branch : std_logic_vector(4 downto 0) := "11000";
-    constant load   : std_logic_vector(4 downto 0) := "00000";
-    constant store  : std_logic_vector(4 downto 0) := "01000";
+    constant lui    : opcode_vector := "01101";
+    constant auipc  : opcode_vector := "00101";
+    constant opimm  : opcode_vector := "00100";
+    constant op     : opcode_vector := "01100";
+    constant jal    : opcode_vector := "11011";
+    constant jalr   : opcode_vector := "11001";
+    constant branch : opcode_vector := "11000";
+    constant load   : opcode_vector := "00000";
+    constant store  : opcode_vector := "01000";
 
     -- alu cotnrol
     constant alu_add    : nibble_vector := "0000";

@@ -17,7 +17,7 @@ end u32_alu;
 -- define the internal organisation and operation of the alu
 architecture behaviour of u32_alu is
 	-- architecture declarations
-	signal shamt		: std_logic_vector(4 downto 0) := (others => '0');
+	signal shamt		: opcode_vector := (others => '0');
 	signal aluresult	: word_vector := (others => '0');
 
 -- concurrent statements
