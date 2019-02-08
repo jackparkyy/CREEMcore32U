@@ -1,6 +1,5 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use work.u32_types.all;
 
 -- define the interface between the alu and its external environment
 entity alu_controller_testbench is
