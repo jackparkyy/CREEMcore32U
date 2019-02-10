@@ -86,7 +86,7 @@ begin
 					alu_sll		when slli_inst | sll_inst,
 					alu_srl		when srli_inst | srl_inst,
 					alu_sra		when srai_inst | sra_inst,
-					alu_sub		when sub_inst,
+					alu_sub		when sub_inst | beq_inst0 | beq_inst1 | bne_inst0 | bne_inst1,
 					alu_pass	when sb_inst1 | sh_inst1 | sw_inst1 | sb_inst0 | sh_inst0 | sw_inst0,
 					alu_add		when others;
 end behaviour;
