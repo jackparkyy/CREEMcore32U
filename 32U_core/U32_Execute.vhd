@@ -35,7 +35,7 @@ begin
     wbsrc_aluop1 <= control(4);
 
     add_result_out <= add_result_reg;
-    pcsrc <= (branch and zero) or jump;
+    --pcsrc <= (branch and ((zero xor funct(0))) or jump;
 
     operand2 <= rs2d when addrsrc_alusrc = '1' else imm;
     addoperand2 <= rs1d when addsrc_aluop0 = '1' else pc;
@@ -59,6 +59,16 @@ begin
         aluop => wbsrc_aluop1 & addsrc_aluop0,
 		funct => funct,
 		alu_control => alu_control
+    );
+
+    -- instantiate Branch
+    u32_branch_controller : entity work.u32_branch_controller
+    port map (
+        jump => jump,
+        branch => branch,
+        zero => zero,
+        funct => funct(2 downto 0),
+		pcsrc => pcsrc
     );
     
     -- sequential statements
