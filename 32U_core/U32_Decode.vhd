@@ -5,13 +5,13 @@ use work.u32_types.all;
 entity u32_decode is
     port(
         clk, reg_write                          : in std_logic                      := '0';
-        rd_addr                                : in std_logic_vector(4 downto 0)   := (others => '0');
+        rd_addr                                 : in std_logic_vector(4 downto 0)   := (others => '0');
         inst                                    : in inst_vector                    := (others => '0');
         pc_in, next_pc_in, rd_data              : in word_vector                    := (others => '0');
         control	                                : out std_logic_vector(8 downto 0)  := (others => '0');
         funct                                   : out nibble_vector                 := (others => '0');
         rs1d, rs2d, imm, pc_out, next_pc_out    : out word_vector                   := (others => '0');
-        rd                                      : out std_logic_vector(11 downto 7) := (others => '0')
+        rd                                      : out std_logic_vector(4 downto 0) := (others => '0')
     );
 end u32_decode;
 
