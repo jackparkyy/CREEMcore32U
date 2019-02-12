@@ -21,7 +21,7 @@ end u32_execute;
 -- define the internal organisation and operation of the decode pipeline stage
 architecture behaviour of u32_execute is
     signal jump, branch, addsrc_aluop0,
-            addrsrc_alusrc, wbsrc_aluop1, zero  : std_logic     := '0';
+            addrsrc_alusrc, aluop1, zero  : std_logic     := '0';
 
     signal operand2, result, add_result_reg,
             addr_const_reg, addoperand2         : word_vector    := (others => '0');
@@ -32,10 +32,9 @@ begin
     branch <= control(1);
     addsrc_aluop0 <= control(2);
     addrsrc_alusrc <= control(3);
-    wbsrc_aluop1 <= control(4);
+    aluop1 <= control(4);
 
     add_result_out <= add_result_reg;
-    --pcsrc <= (branch and ((zero xor funct(0))) or jump;
 
     operand2 <= rs2d when addrsrc_alusrc = '1' else imm;
     addoperand2 <= rs1d when addsrc_aluop0 = '1' else pc;
@@ -56,7 +55,7 @@ begin
     -- instantiate ALU controller
     u32_alu_controller : entity work.u32_alu_controller
     port map (
-        aluop => wbsrc_aluop1 & addsrc_aluop0,
+        aluop => aluop1 & addsrc_aluop0,
 		funct => funct,
 		alu_control => alu_control
     );
