@@ -57,13 +57,13 @@ begin
             rs2d <= passed_rs2d;
             imm <= passed_imm;
             rd <= "11111";
-			clk <= '1';
 
 			wait for clock_delay;
-            clk <= '0';
+            clk <= '1';
 			wait for clock_delay;
-			clk <= '1';
+			clk <= '0';
             
+            wait for 1 ps;
             assert funct_out = passed_funct
             report "Unexcpected result: " &
             "instruction type = " & inst_type & "; " &
@@ -310,7 +310,7 @@ begin
         test_op(x"AAAAAAAA", x"00000001", x"D5555555", "1101"); -- SRA
         test_op(x"FFFFFFFF", x"00000000", x"FFFFFFFF", "0110"); -- OR
         test_op(x"FFFFFFFF", x"00000000", x"00000000", "0111"); -- AND
-        wait for clock_delay;
+        wait for 10 ns;
 		wait;
 	end process;
 end behaviour;

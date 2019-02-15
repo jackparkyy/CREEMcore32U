@@ -121,14 +121,14 @@ begin
             rd_data <= data;
 			rd_addr <= address;
             inst <=  instruction(31 downto 2);
-			clk <= '1';
 			current_pc <= next_pc_out;
 
 			wait for clock_delay;
-			clk <= '0';
-			wait for clock_delay;
 			clk <= '1';
+			wait for clock_delay;
+			clk <= '0';
 
+			wait for 1 ps;
 			assert (pc_out = current_pc and next_pc_out = (current_pc + x"00000004"))
 			report "Unexcpected PC: " &
 			"pc_out = 0x" & to_hex_string(pc_out) & "; " &
@@ -154,6 +154,7 @@ begin
 		test(x"401000B3", x"00000000", "00001", '0');
 		test(x"401000B3", x"00000000", "00001", '1');
 		test(x"401000B3", x"FFFFFFFF", "00000", '1');
+		wait for 10 ns;
 		wait;
 	end process;
 end behaviour;
