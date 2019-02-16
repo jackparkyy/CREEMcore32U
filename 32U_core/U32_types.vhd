@@ -11,6 +11,7 @@ package u32_types is
     subtype nibble_vector is std_logic_vector(3 downto 0);
     subtype inst_vector is std_logic_vector(31 downto 2);
     subtype opcode_vector is std_logic_vector(6 downto 2);
+    subtype inst_mem_addr is std_logic_vector(5 downto 0);
 
     -- opcode suffix, always 11 for rx32i architectures
     constant suffix : std_logic_vector(1 downto 0) := "11";
@@ -38,4 +39,6 @@ package u32_types is
     constant alu_sra    : nibble_vector := "1000";
     constant alu_sub    : nibble_vector := "1001";
     constant alu_pass   : nibble_vector := "1010";
+
+    constant inst_mem_len   : integer := 63;
 end package u32_types;
