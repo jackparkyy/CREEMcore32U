@@ -13,31 +13,30 @@ entity u32_instruction_memory is
 end u32_instruction_memory;
     
 architecture rtl of u32_instruction_memory is
-    type word_matrix is array (0 to inst_mem_len) of word_vector;
+    constant inst_mem_xlen : natural := ((inst_mem_size / 4) - 1);
 
-    signal inst_addr    : inst_mem_addr  := (others => '0');
-    signal inst_mem     : word_matrix    := (others => (others => '0'));
-    signal booted       : std_logic     := '0';
+    type ram is array (0 to inst_mem_xlen) of word_vector;
+
+    signal inst_ram     : ram       := (others => (others => '0'));
+    signal booted       : std_logic := '0';
 begin
     -- concurrent statements (read)
-    inst_addr <= pc(5 downto 0);
-
-    inst <= inst_mem(to_integer(unsigned(inst_addr)));
+    inst <= inst_ram(to_integer(unsigned(pc)));
 
     clk_out <= clk when booted = '1';
 
     -- sequential statements (write)
     process 
-        variable count : natural range 0 to inst_mem_len := 0;
+        variable count : natural range 0 to inst_mem_xlen := 0;
     begin
         wait until rising_edge(clk);
         if booted = '0' then
             count := count + 1;
-            if count = inst_mem_len then
+            if count = inst_mem_xlen then
                 booted <= '1';
             end if;
         elsif write_en = '1' then
-            inst_mem(to_integer(unsigned(write_addr))) <= write_inst;
+            inst_ram(to_integer(unsigned(write_addr))) <= write_inst;
         end if;
     end process;
 end rtl;

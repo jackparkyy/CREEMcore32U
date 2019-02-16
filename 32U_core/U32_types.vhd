@@ -1,20 +1,25 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 package u32_types is
     -- set bit length of architecture
     constant xlen			: natural := 31;
+
+    -- opcode suffix, always 11 for rx32i architectures
+    constant suffix : std_logic_vector(1 downto 0) := "11";
+
+    -- size of ram in bytes (should be a power of 2 e.g. 256, 512, 1024, etc)
+    constant data_mem_size : natural := 256;
+    constant inst_mem_size : natural := 256;
     
+    -- subtypes used throughout the u32 core
     subtype word_vector is std_logic_vector(31 downto 0);
     subtype half_word_vector is std_logic_vector(15 downto 0);
     subtype byte_vector is std_logic_vector(7 downto 0);
     subtype nibble_vector is std_logic_vector(3 downto 0);
     subtype inst_vector is std_logic_vector(31 downto 2);
     subtype opcode_vector is std_logic_vector(6 downto 2);
-    subtype inst_mem_addr is std_logic_vector(5 downto 0);
-
-    -- opcode suffix, always 11 for rx32i architectures
-    constant suffix : std_logic_vector(1 downto 0) := "11";
 
     -- opcodes reduced down from 7 bits to 5 by excluding the architectures suffix
     constant lui    : opcode_vector := "01101";
@@ -39,6 +44,4 @@ package u32_types is
     constant alu_sra    : nibble_vector := "1000";
     constant alu_sub    : nibble_vector := "1001";
     constant alu_pass   : nibble_vector := "1010";
-
-    constant inst_mem_len   : integer := 63;
 end package u32_types;
