@@ -12,7 +12,7 @@ entity u32_alu_controller is
 end u32_alu_controller;
 
 -- define the internal organisation and operation of the alu
-architecture behaviour of u32_alu_controller is
+architecture rtl of u32_alu_controller is
 	-- architecture declarations
 	subtype aluop_vector is std_logic_vector(1 downto 0);
 	subtype alu_inst_vector is std_logic_vector(5 downto 0);
@@ -89,4 +89,4 @@ begin
 					alu_sub		when sub_inst | beq_inst0 | beq_inst1 | bne_inst0 | bne_inst1,
 					alu_pass	when sb_inst1 | sh_inst1 | sw_inst1 | sb_inst0 | sh_inst0 | sw_inst0,
 					alu_add		when others;
-end behaviour;
+end rtl;

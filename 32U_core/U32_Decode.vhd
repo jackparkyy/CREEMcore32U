@@ -16,7 +16,7 @@ entity u32_decode is
 end u32_decode;
 
 -- define the internal organisation and operation of the decode pipeline stage
-architecture behaviour of u32_decode is
+architecture rtl of u32_decode is
     signal imm_reg      : word_vector                   := (others => '0');
     signal rs1d_reg     : word_vector                   := (others => '0');
     signal rs2d_reg     : word_vector                   := (others => '0');
@@ -62,4 +62,4 @@ begin
         rd <= inst(11 downto 7);
         next_pc_out <= next_pc_in;
     end process;
-end behaviour;
+end rtl;

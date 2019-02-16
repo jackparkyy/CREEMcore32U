@@ -15,7 +15,7 @@ entity u32_mem_access is
 end u32_mem_access;
 
 -- define the internal organisation and operation of the memory access pipeline stage
-architecture behaviour of u32_mem_access is
+architecture rtl of u32_mem_access is
     signal wbsrc                    : std_logic_vector(1 downto 0)  := (others => '0');
     signal mem_write, mem_read      : std_logic                     := '0';
     signal funct_rdd_reg, oper_reg  : word_vector                   := (others => '0');
@@ -51,4 +51,4 @@ begin
         oper <= oper_reg;
         rd_out <= rd;
     end process;
-end behaviour;
+end rtl;

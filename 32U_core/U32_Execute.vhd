@@ -19,7 +19,7 @@ entity u32_execute is
 end u32_execute;
 
 -- define the internal organisation and operation of the decode pipeline stage
-architecture behaviour of u32_execute is
+architecture rtl of u32_execute is
     signal jump, branch, addsrc_aluop0,
             addrsrc_alusrc, aluop1, zero  : std_logic     := '0';
 
@@ -80,4 +80,4 @@ begin
         rd_out <= rd;
         addr_const <= addr_const_reg;
     end process;
-end behaviour;
+end rtl;

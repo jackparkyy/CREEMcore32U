@@ -12,7 +12,7 @@ entity u32_branch_controller is
 end u32_branch_controller;
 
 -- define the internal organisation and operation of the alu
-architecture behaviour of u32_branch_controller is
+architecture rtl of u32_branch_controller is
 -- concurrent statements
 begin
 	pcsrc <=    '1' when jump = '1' else
@@ -23,4 +23,4 @@ begin
                 '1' when branch & zero & funct = "10110" else -- BLTU and less than
                 '1' when branch & zero & funct = "11111" else -- BGEU and greater than or equal
                 '0';
-end behaviour;
+end rtl;

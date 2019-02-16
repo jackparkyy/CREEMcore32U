@@ -15,7 +15,7 @@ entity u32_alu is
 end u32_alu;
 
 -- define the internal organisation and operation of the alu
-architecture behaviour of u32_alu is
+architecture rtl of u32_alu is
 	-- architecture declarations
 	signal shamt		: opcode_vector := (others => '0');
 	signal aluresult	: word_vector := (others => '0');
@@ -61,4 +61,4 @@ begin
 				aluresult <= operand1 + operand2;
 		end case;
 	end process;
-end behaviour;
+end rtl;

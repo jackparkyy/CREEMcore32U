@@ -10,7 +10,7 @@ entity u32_data_extender is
 	);
 end u32_data_extender;
 
-architecture behaviour of u32_data_extender is
+architecture rtl of u32_data_extender is
     
 begin
     with funct select
@@ -19,4 +19,4 @@ begin
                 (xlen downto 8 => '0') & oper(7 downto 0) when "100",
                 (xlen downto 16 => '0') & oper(15 downto 0) when "101",
                 oper when others;
-end behaviour;
+end rtl;

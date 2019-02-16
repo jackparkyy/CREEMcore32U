@@ -11,7 +11,7 @@ entity u32_immediate_decoder is
 end u32_immediate_decoder;
 
 -- define the internal organisation and operation of the immediate decoder
-architecture behaviour of u32_immediate_decoder is
+architecture rtl of u32_immediate_decoder is
     signal opcode : opcode_vector := (others => '0');
 begin
     opcode <= inst(6 downto 2); -- isolate opcode from instrcution
@@ -22,4 +22,4 @@ begin
             (xlen downto 12 => inst(xlen)) & inst(7) & inst(30 downto 25) & inst(11 downto 8) & '0'     when branch, -- B-type
             (xlen downto 11 => inst(xlen)) & inst(30 downto 25) & inst(11 downto 7)                     when store, -- S-type
             (xlen downto 11 => inst(xlen)) & inst(30 downto 20)                                         when others; -- I-type
-end behaviour;
+end rtl;

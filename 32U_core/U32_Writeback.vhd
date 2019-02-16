@@ -13,7 +13,7 @@ entity u32_writeback is
     );
 end u32_writeback;
 
-architecture behaviour of u32_writeback is
+architecture rtl of u32_writeback is
     signal oper_out : word_vector := (others => '0');
 begin
     -- concurrent statements
@@ -27,4 +27,4 @@ begin
     rd_data <= oper_out when control(0) else funct_rdd;
     reg_write <= control(1);
     rd_out <= rd;
-end behaviour;
+end rtl;

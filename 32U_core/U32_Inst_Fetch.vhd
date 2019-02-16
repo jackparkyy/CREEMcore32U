@@ -12,7 +12,7 @@ entity u32_inst_fetch is
     );
 end u32_inst_fetch;
     
-architecture behaviour of u32_inst_fetch is
+architecture rtl of u32_inst_fetch is
     signal pc_reg_in, pc_reg_out, inst_reg  : word_vector   := (others => '0');
 
     constant increment  : std_logic_vector(xlen downto 0)   := ((xlen downto 1 => '0') & '1');
@@ -39,4 +39,4 @@ begin
         next_pc_out <= pc_reg_out + increment;
         inst <= inst_reg;
     end process;
-end behaviour;
+end rtl;

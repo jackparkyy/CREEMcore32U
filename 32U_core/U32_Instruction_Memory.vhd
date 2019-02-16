@@ -12,7 +12,7 @@ entity u32_instruction_memory is
     );
 end u32_instruction_memory;
     
-architecture behaviour of u32_instruction_memory is
+architecture rtl of u32_instruction_memory is
     type word_matrix is array (0 to inst_mem_len) of word_vector;
 
     signal inst_addr    : inst_mem_addr  := (others => '0');
@@ -40,4 +40,4 @@ begin
             inst_mem(to_integer(unsigned(write_addr))) <= write_inst;
         end if;
     end process;
-end behaviour;
+end rtl;

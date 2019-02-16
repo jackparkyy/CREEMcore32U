@@ -10,7 +10,7 @@ entity u32_controller is
 end u32_controller;
 
 -- define the internal organisation and operation of the general purpose registers
-architecture behaviour of u32_controller is
+architecture rtl of u32_controller is
     
 begin
     -- concurrent statements
@@ -24,4 +24,4 @@ begin
 				"110110100"	when load,
 				"001011100"	when store,
 				"100100000"	when others; --opimm
-end behaviour;
+end rtl;

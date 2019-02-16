@@ -13,7 +13,7 @@ entity u32_gp_registers is
 end u32_gp_registers;
 
 -- define the internal organisation and operation of the general purpose registers
-architecture behaviour of u32_gp_registers is
+architecture rtl of u32_gp_registers is
     type word_matrix is array (0 to 31) of word_vector;
     signal gp_registers : word_matrix := (others => (others => '0'));
 begin
@@ -28,4 +28,4 @@ begin
             gp_registers(to_integer(unsigned(rd_addr))) <= rd_data;
         end if;
     end process;
-end behaviour;
+end rtl;
