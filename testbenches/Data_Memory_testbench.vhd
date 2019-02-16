@@ -64,6 +64,7 @@ begin
 			clk <= '0';
 		end procedure test_write;
 	begin
+		-- test vectors set based on data mem size of 256B
 		test_read(x"00000000", x"00000000");
 		test_write(x"00000000", x"FFFFFFFF", "10");
 		test_read(x"00000000", x"FFFFFFFF");
@@ -83,10 +84,13 @@ begin
 		test_read(x"000000FF", x"000000FF");
 
 		test_write(x"000000FD", x"44444444", "10");
+		test_read(x"000000FD", x"00444444");
 		test_read(x"000000FC", x"44444411");
 		test_write(x"000000FE", x"AAAAAAAA", "10");
+		test_read(x"000000FE", x"0000AAAA");
 		test_read(x"000000FC", x"AAAA4411");
 		test_write(x"000000FF", x"FFFFFFFF", "10");
+		test_read(x"000000FF", x"000000FF");
 		test_read(x"000000FC", x"FFAA4411");
 		
 		test_write(x"000000FC", x"FFFFFFFF", "01");
