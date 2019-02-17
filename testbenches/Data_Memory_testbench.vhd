@@ -11,7 +11,7 @@ architecture behaviour of data_memory_testbench is
 	-- architecture declarations
 	constant clock_delay	: time := 50 ns;
 
-    signal clk, mem_write, mem_read     : std_logic := '0';
+    signal clk, write_en, read_en     : std_logic := '0';
 	signal addr, write_data, read_data 	: std_logic_vector(31 downto 0) := (others => '0');
 	signal funct 						: std_logic_vector(1 downto 0) := (others => '0');
 -- concurrent statements
@@ -20,8 +20,8 @@ begin
 	data_memory : entity work.u32_data_memory
 	port map (
 		clk => clk,
-		mem_write => mem_write,
-		mem_read => mem_read,
+		write_en => write_en,
+		read_en => read_en,
 		funct => funct,
 		addr => addr,
 		write_data => write_data,
@@ -33,8 +33,8 @@ begin
 			constant address, expected	: in std_logic_vector(31 downto 0)
 		) is begin
 			addr <= address;
-			mem_read <= '1';
-			mem_write <= '0';
+			read_en <= '1';
+			write_en <= '0';
 
 			wait for clock_delay;
 			clk <= '1';
@@ -53,8 +53,8 @@ begin
 			constant size           : in std_logic_vector(1 downto 0)
 		) is begin
 			addr <= address;
-			mem_read <= '0';
-			mem_write <= '1';
+			read_en <= '0';
+			write_en <= '1';
 			write_data <= data;
 			funct <= size;
 

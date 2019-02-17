@@ -5,7 +5,7 @@ use work.u32_types.all;
 
 entity u32_data_memory is
     port (
-        clk, mem_write, mem_read   : in std_logic := '0';
+        clk, write_en, read_en   : in std_logic := '0';
         funct                      : in std_logic_vector(1 downto 0) := (others => '0');
         addr, write_data           : in word_vector := (others => '0');
         read_data                  : out word_vector := (others => '0')
@@ -42,23 +42,23 @@ begin
             data_ram(ram_addr + 1) &
             data_ram(ram_addr);
 
-    read_data <= data when (mem_read = '1') else x"00000000";
+    read_data <= data when (read_en = '1') else x"00000000";
 
     process begin
         wait until rising_edge(clk);
-        if (mem_write = '1' and funct = word and ram_addr /= last_byte and ram_addr /= second_last_byte and ram_addr /= third_last_byte) then
+        if (write_en = '1' and funct = word and ram_addr /= last_byte and ram_addr /= second_last_byte and ram_addr /= third_last_byte) then
             data_ram(ram_addr) <= write_data(7 downto 0);
             data_ram(ram_addr + 1) <= write_data(15 downto 8);
             data_ram(ram_addr + 2) <= write_data(23 downto 16);
             data_ram(ram_addr + 3) <= write_data(31 downto 24);
-        elsif (mem_write = '1' and funct = word and ram_addr /= last_byte and ram_addr /= second_last_byte) then
+        elsif (write_en = '1' and funct = word and ram_addr /= last_byte and ram_addr /= second_last_byte) then
             data_ram(ram_addr) <= write_data(7 downto 0);
             data_ram(ram_addr + 1) <= write_data(15 downto 8);
             data_ram(ram_addr + 2) <= write_data(23 downto 16);
-        elsif (mem_write = '1' and funct /= byte and ram_addr /= last_byte) then
+        elsif (write_en = '1' and funct /= byte and ram_addr /= last_byte) then
             data_ram(ram_addr) <= write_data(7 downto 0);
             data_ram(ram_addr + 1) <= write_data(15 downto 8);
-        elsif (mem_write = '1') then
+        elsif (write_en = '1') then
             data_ram(ram_addr) <= write_data(7 downto 0);
         end if;
     end process;
