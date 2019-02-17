@@ -14,6 +14,7 @@ end u32_inst_fetch;
     
 architecture rtl of u32_inst_fetch is
     signal pc_reg_in, pc_reg_out, inst_reg  : word_vector   := (others => '0');
+    signal clock                            : std_logic      := '0';
 
     constant increment  : std_logic_vector(xlen downto 0)   := ((xlen downto 1 => '0') & '1');
 begin
@@ -21,19 +22,20 @@ begin
 	port map (
         clk => clk,
         write_en => write_en,
-        pc => pc_reg_out,
+        read_addr => pc_reg_out,
         write_inst => write_inst,
         write_addr => write_addr,
         inst => inst_reg,
-        clk_out => clk_out
+        clk_out => clock
     );
 
     pc_reg_in <=    new_pc when pc_src = '1' else
                     pc_reg_out + increment;
 
+    clk_out <= clock;
     -- sequential statements
     process begin
-        wait until falling_edge(clk);
+        wait until falling_edge(clock);
         pc_reg_out <= pc_reg_in;
         pc_out <= pc_reg_out;
         next_pc_out <= pc_reg_out + increment;

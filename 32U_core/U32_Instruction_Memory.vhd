@@ -6,7 +6,7 @@ use work.u32_types.all;
 entity u32_instruction_memory is
     port (
         clk, write_en               : in std_logic      := '0';
-        pc, write_inst, write_addr  : in word_vector    := (others => '0');
+        read_addr, write_inst, write_addr  : in word_vector    := (others => '0');
         inst                        : out word_vector   := (others => '0');
         clk_out                     : out std_logic     := '0'
     );
@@ -21,7 +21,7 @@ architecture rtl of u32_instruction_memory is
     signal booted       : std_logic := '0';
 begin
     -- concurrent statements (read)
-    inst <= inst_ram(to_integer(unsigned(pc)));
+    inst <= inst_ram(to_integer(unsigned(read_addr)));
 
     clk_out <= clk when booted = '1';
 
@@ -31,11 +31,13 @@ begin
     begin
         wait until rising_edge(clk);
         if booted = '0' then
-            count := count + 1;
             if count = inst_mem_xlen then
                 booted <= '1';
+            else
+                count := count + 1;
             end if;
-        elsif write_en = '1' then
+        end if;
+        if write_en = '1' then
             inst_ram(to_integer(unsigned(write_addr))) <= write_inst;
         end if;
     end process;
