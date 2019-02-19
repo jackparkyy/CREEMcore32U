@@ -14,7 +14,7 @@ entity u32_execute is
         funct_out                       : out nibble_vector                 := (others => '0');
         alu_result, add_result,
         add_result_out, addr_const      : out word_vector                   := (others => '0');
-        pcsrc                           : out std_logic                     := '0'
+        pc_src                           : out std_logic                     := '0'
     );
 end u32_execute;
 
@@ -67,7 +67,7 @@ begin
         branch => branch,
         zero => zero,
         funct => funct(2 downto 0),
-		pcsrc => pcsrc
+		pc_src => pc_src
     );
     
     -- sequential statements

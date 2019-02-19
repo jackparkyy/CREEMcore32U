@@ -11,7 +11,7 @@ architecture behaviour of execute_testbench is
 	-- architecture declarations
 	constant clock_delay	: time := 50 ns;
 
-    signal clk, pcsrc                       : std_logic                      := '0';
+    signal clk, pc_src                       : std_logic                      := '0';
     signal control                          : std_logic_vector(8 downto 0)   := (others => '0');
     signal rd, control_out, rd_out          : std_logic_vector(4 downto 0)   := (others => '0');
     signal funct, funct_out                 : std_logic_vector(3 downto 0)   := (others => '0');
@@ -41,13 +41,13 @@ begin
         add_result => add_result,
         add_result_out => add_result_out,
         addr_const => addr_const,
-        pcsrc => pcsrc
+        pc_src => pc_src
 	);
 	
 	process
 		procedure test(
             constant passed_rs1d, passed_rs2d, passed_imm   : in std_logic_vector(31 downto 0);
-            constant passed_pcsrc                           : in std_logic;
+            constant passed_pc_src                           : in std_logic;
             constant passed_funct                           : in std_logic_vector(3 downto 0);
             constant inst_type                              : in string
 		) is
@@ -78,11 +78,11 @@ begin
 			"expected = 11111; "
             severity error;
             
-            assert pcsrc = passed_pcsrc
+            assert pc_src = passed_pc_src
             report "Unexcpected result: " &
             "instruction type = " & inst_type & "; " &
-			"pcsrc = " & to_string(pcsrc) & "; " &
-			"expected = " & to_string(passed_pcsrc) & "; "
+			"pc_src = " & to_string(pc_src) & "; " &
+			"expected = " & to_string(passed_pc_src) & "; "
 			severity error;
         end procedure test;
 

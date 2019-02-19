@@ -8,7 +8,8 @@ entity u32_inst_fetch is
     port (
         clk, write_en, pc_src           : in std_logic      := '0';
         write_inst, write_addr, new_pc  : in word_vector    := (others => '0');
-        inst, pc_out, next_pc_out       : out word_vector   := (others => '0')
+        inst, pc_out, next_pc_out       : out word_vector   := (others => '0');
+        clk_en_out                      : out std_logic     := '0'
     );
 end u32_inst_fetch;
     
@@ -20,6 +21,7 @@ architecture rtl of u32_inst_fetch is
 
     signal pc_reg_in, pc_reg_out, inst_reg  : word_vector   := (others => '0');
     signal inst_ram                         : ram           := (others => (others => '0'));
+    signal clk_en                           : std_logic     := '0';
 begin
     -- concurrent statements (read)
     inst_reg <= inst_ram(to_integer(unsigned(pc_reg_out)));
@@ -27,14 +29,15 @@ begin
     pc_reg_in <=    new_pc when pc_src = '1' else
                     pc_reg_out + increment;
 
+    clk_en_out <= clk_en;
+
     -- sequential statements
     process (clk)
         variable count  : natural range 0 to inst_mem_xlen  := 0;
-        variable clk_en : std_logic                         := '0';
     begin
         if rising_edge(clk) then
             if count = inst_mem_xlen then
-                clk_en := '1';
+                clk_en <= '1';
             else 
                 count := count + 1;
             end if;
