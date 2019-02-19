@@ -28,16 +28,26 @@ begin
                     pc_reg_out + increment;
 
     -- sequential statements
-    process (clk) begin
+    process (clk)
+        variable count  : natural range 0 to inst_mem_xlen  := 0;
+        variable clk_en : std_logic                         := '0';
+    begin
         if rising_edge(clk) then
+            if count = inst_mem_xlen then
+                clk_en := '1';
+            else 
+                count := count + 1;
+            end if;
             if write_en = '1' then
                 inst_ram(to_integer(unsigned(write_addr))) <= write_inst;
             end if;
         elsif falling_edge(clk) then
-            pc_reg_out <= pc_reg_in;
-            pc_out <= pc_reg_out;
-            next_pc_out <= pc_reg_out + increment;
-            inst <= inst_reg;
+            if clk_en = '1' then
+                pc_reg_out <= pc_reg_in;
+                pc_out <= pc_reg_out;
+                next_pc_out <= pc_reg_out + increment;
+                inst <= inst_reg;
+            end if;
         end if;
     end process;
 end rtl;
