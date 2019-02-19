@@ -4,7 +4,7 @@ use work.u32_types.all;
 
 entity u32_decode is
     port(
-        clk, reg_write                          : in std_logic                      := '0';
+        clk, clk_en, reg_write                  : in std_logic                      := '0';
         rd_addr                                 : in std_logic_vector(4 downto 0)   := (others => '0');
         inst                                    : in inst_vector                    := (others => '0');
         pc_in, next_pc_in, rd_data              : in word_vector                    := (others => '0');
@@ -53,13 +53,15 @@ begin
     -- sequential statements
     process begin
         wait until falling_edge(clk);
-        control <= control_reg;
-        funct <= inst(30) & inst(14 downto 12);
-        rs1d <= rs1d_reg;
-        rs2d <= rs2d_reg;
-        imm <= imm_reg;
-        pc_out <= pc_in;
-        rd <= inst(11 downto 7);
-        next_pc_out <= next_pc_in;
+        if clk_en = '1' then
+            control <= control_reg;
+            funct <= inst(30) & inst(14 downto 12);
+            rs1d <= rs1d_reg;
+            rs2d <= rs2d_reg;
+            imm <= imm_reg;
+            pc_out <= pc_in;
+            rd <= inst(11 downto 7);
+            next_pc_out <= next_pc_in;
+        end if;
     end process;
 end rtl;

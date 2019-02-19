@@ -4,7 +4,7 @@ use work.u32_types.all;
 
 entity u32_mem_access is
     port (
-        clk                                 : in std_logic                      := '0';
+        clk, clk_en                         : in std_logic                      := '0';
         control, rd                         : in std_logic_vector(4 downto 0)   := (others => '0');
         funct                               : in nibble_vector                  := (others => '0');
         alu_result, add_result, addr_const  : in word_vector                    := (others => '0');
@@ -46,9 +46,11 @@ begin
     -- sequential statements
     process begin
         wait until falling_edge(clk);
-        control_out <= control(4 downto 3);
-        funct_rdd <= funct_rdd_reg;
-        oper <= oper_reg;
-        rd_out <= rd;
+        if clk_en = '1' then
+            control_out <= control(4 downto 3);
+            funct_rdd <= funct_rdd_reg;
+            oper <= oper_reg;
+            rd_out <= rd;
+        end if;
     end process;
 end rtl;
