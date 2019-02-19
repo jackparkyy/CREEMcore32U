@@ -5,7 +5,7 @@ use work.u32_types.all;
 
 entity u32_execute is
     port(
-        clk                             : in std_logic                      := '0';
+        clk, clk_en                     : in std_logic                      := '0';
         control                         : in std_logic_vector(8 downto 0)   := (others => '0');
         rd	                            : in std_logic_vector(4 downto 0)   := (others => '0');
         funct                           : in nibble_vector                  := (others => '0');
@@ -73,11 +73,13 @@ begin
     -- sequential statements
     process begin
         wait until falling_edge(clk);
-        control_out <= control(8 downto 4);
-        funct_out <= funct;
-        alu_result <= result;
-        add_result <= add_result_reg;
-        rd_out <= rd;
-        addr_const <= addr_const_reg;
+        if clk_en = '1' then
+            control_out <= control(8 downto 4);
+            funct_out <= funct;
+            alu_result <= result;
+            add_result <= add_result_reg;
+            rd_out <= rd;
+            addr_const <= addr_const_reg;
+        end if;
     end process;
 end rtl;

@@ -12,9 +12,10 @@ architecture behaviour of inst_fetch_testbench is
     -- architecture declarations
     constant clock_delay	: time := 50 ns;
 
-	signal clk, write_en, pc_src, clk_out   : std_logic      := '0';
+	signal clk, write_en, pc_src            : std_logic      := '0';
     signal write_inst, write_addr, new_pc,
             inst, pc_out, next_pc_out       : std_logic_vector(31 downto 0)   := (others => '0');
+    signal current_pc                       : std_logic_vector(31 downto 0)   := (others => '0');
 -- concurrent statements
 begin
 	-- instantiate instruction fetch pipeline stage
@@ -28,20 +29,19 @@ begin
         new_pc => new_pc,
         inst => inst,
         pc_out => pc_out,
-        next_pc_out => next_pc_out,
-        clk_out =>  clk_out
+        next_pc_out => next_pc_out
     );
 	
 	process
 		procedure test(
-            constant program_counter    : in std_logic_vector(31 downto 0);
-            constant expected           : in std_logic_vector(31 downto 0);
-            constant source             : in std_logic
+            constant jump   : in std_logic_vector(31 downto 0);
+            constant source : in std_logic
 		) is
-			
-		begin		
+            variable expected   : std_logic_vector(31 downto 0) := (others => '0');
+        begin
             pc_src <= source;
-			new_pc <= program_counter;
+            new_pc <= jump;
+            write_en <= '0';
 
 			wait for clock_delay;
 			clk <= '1';
@@ -49,43 +49,65 @@ begin
             clk <= '0';
             
             wait for 1 ps;
+
+            expected := x"0000003F" - current_pc;
+
+            assert (pc_out = current_pc)
+            report "Unexcpected PC: " &
+            "pc = 0x" & to_hex_string(pc_out) & "; " &
+            "pc_src = " & to_string(pc_src) & "; " &
+            "expected = 0x" & to_hex_string(current_pc) & "; "
+            severity error;
+
+            assert (inst = expected)
+            report "Unexcpected result: " &
+            "inst = 0x" & to_hex_string(inst) & "; " &
+            "expected = 0x" & to_hex_string(expected) & "; "
+            severity error;
+
             if source = '1' then
-                assert (inst = expected)
-                report "Unexcpected PC: " &
-                "inst = 0x" & to_hex_string(inst) & "; " &
-                "expected = 0x" & to_hex_string(expected) & "; "
-                severity error;
+                current_pc <= jump;
             else
-                assert (inst = x"FFFFFFFF")
-                report "Unexcpected PC: " &
-                "inst = 0x" & to_hex_string(inst) & "; " &
-                "expected = 0x" & to_hex_string(expected) & "; "
-                severity error;
+                current_pc  <= current_pc + x"00000001";
             end if;
         end procedure test;
         
-        procedure test_write(
-			constant address, instruction   :in std_logic_vector(31 downto 0)
-        ) is begin
-            write_en <= '1';
-            write_addr <= address;
-			write_inst <= instruction;
+        procedure fill_inst_mem is begin
+            for i in 0 to 63 loop
+                write_en <= '1';
+                write_inst <= std_logic_vector(to_unsigned(i, 32));
+                write_addr <= std_logic_vector(to_unsigned((63 - i), 32));
 
-			wait for clock_delay;
-			clk <= '1';
-			wait for clock_delay;
-            clk <= '0';
-		end procedure test_write;
+                wait for clock_delay;
+                clk <= '1';
+                wait for clock_delay;
+                clk <= '0';
+            end loop;
+
+            wait for 1 ps;
+            assert (pc_out = x"00000000")
+            report "Unexcpected PC: " &
+            "pc = 0x" & to_hex_string(pc_out) & "; " &
+            "pc_src = " & to_string(pc_src) & "; " &
+            "expected = 0x00000000; "
+            severity error;
+
+            assert (inst = x"0000003F")
+            report "Unexcpected result: " &
+            "inst = 0x" & to_hex_string(inst) & "; " &
+            "expected = 0x0000003F; "
+            severity error;
+
+            current_pc  <= current_pc + x"00000001";
+		end procedure fill_inst_mem;
     begin
         -- test vectors set based on data mem size of 256B
-        for i in 0 to 31 loop
-            test_write(std_logic_vector(to_unsigned(i, 32)), x"FFFFFFFF");
-        end loop;
-        for i in 32 to 63 loop
-            test_write(std_logic_vector(to_unsigned(i, 32)), x"AAAAAAAA");
-        end loop;
+        fill_inst_mem;
 
-        test(x"00000023", x"AAAAAAAA", '1');
+        test(x"00000000", '0');
+        test(x"00000000", '0');
+        test(x"00000023", '1');
+        test(x"00000000", '0');
 		wait for 10 ns;
 		wait;
 	end process;
