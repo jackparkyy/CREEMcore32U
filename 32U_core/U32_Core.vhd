@@ -37,7 +37,7 @@ architecture rtl of u32_core is
             rd_addr,
             rd_d_e,
             rd_e_ma,
-            rd_ma_w         : std_logic_vector(4 downto 0)  := (others => '0');
+            rd_ma_w         : addr_vector                   := (others => '0');
     signal  control_ma_w    : std_logic_vector(1 downto 0)  := (others => '0');
     signal  funct_d_e,
             funct_e_ma      : nibble_vector                 := (others => '0');

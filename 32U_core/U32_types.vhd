@@ -20,6 +20,7 @@ package u32_types is
     subtype nibble_vector is std_logic_vector(3 downto 0);
     subtype inst_vector is std_logic_vector(31 downto 2);
     subtype opcode_vector is std_logic_vector(6 downto 2);
+    subtype addr_vector is std_logic_vector(4 downto 0);
 
     -- opcodes reduced down from 7 bits to 5 by excluding the architectures suffix
     constant lui    : opcode_vector := "01101";

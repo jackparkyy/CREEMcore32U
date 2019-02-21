@@ -9,7 +9,7 @@ entity u32_mem_access is
         funct                               : in nibble_vector                  := (others => '0');
         alu_result, add_result, addr_const  : in word_vector                    := (others => '0');
         oper, funct_rdd                     : out word_vector                   := (others => '0');
-        rd_out                              : out std_logic_vector(4 downto 0)  := (others => '0');
+        rd_out                              : out addr_vector                   := (others => '0');
         control_out                         : out std_logic_vector(1 downto 0)  := (others => '0')
     );
 end u32_mem_access;

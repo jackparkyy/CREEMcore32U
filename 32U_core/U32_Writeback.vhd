@@ -6,8 +6,8 @@ entity u32_writeback is
     port(
         control             : in std_logic_vector(1 downto 0)   := (others => '0');
         oper, funct_rdd     : in word_vector                    := (others => '0');
-        rd                  : in std_logic_vector(4 downto 0)   := (others => '0');
-        rd_out              : out std_logic_vector(4 downto 0)  := (others => '0');
+        rd                  : in addr_vector                    := (others => '0');
+        rd_out              : out addr_vector                   := (others => '0');
         rd_data             : out word_vector                   := (others => '0');
         reg_write           : out std_logic                     := '0'
     );

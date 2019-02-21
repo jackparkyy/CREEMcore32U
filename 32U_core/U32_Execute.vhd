@@ -7,10 +7,10 @@ entity u32_execute is
     port(
         clk, clk_en                     : in std_logic                      := '0';
         control                         : in std_logic_vector(8 downto 0)   := (others => '0');
-        rd	                            : in std_logic_vector(4 downto 0)   := (others => '0');
+        rd	                            : in addr_vector                    := (others => '0');
         funct                           : in nibble_vector                  := (others => '0');
         rs1d, rs2d, imm, pc, next_pc    : in word_vector                    := (others => '0');
-        control_out, rd_out             : out std_logic_vector(4 downto 0)  := (others => '0');
+        control_out, rd_out             : out addr_vector                   := (others => '0');
         funct_out                       : out nibble_vector                 := (others => '0');
         alu_result, add_result,
         add_result_out, addr_const      : out word_vector                   := (others => '0');
