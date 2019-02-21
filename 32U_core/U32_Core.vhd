@@ -5,7 +5,10 @@ use work.u32_types.all;
 entity u32_core is
     port (
         clk, write_en           : in std_logic      := '0';
-        write_inst, write_addr  : in word_vector    := (others => '0')
+        write_inst, write_addr  : in word_vector    := (others => '0');
+        rd_data_out             : out word_vector   := (others => '0');
+        rd_addr_out             : out addr_vector   := (others => '0');
+        reg_write_out           : out std_logic     := '0'
     );
 end u32_core;
 
@@ -135,5 +138,9 @@ begin
         rd_out => rd_addr,
         rd_data => rd_data,
         reg_write => reg_write
-    );    
+    );
+
+    rd_data_out <= rd_data;
+    rd_addr_out <= rd_addr;
+    reg_write_out <= reg_write;
 end rtl;
