@@ -12,7 +12,7 @@ architecture behaviour of decode_testbench is
 	constant clock_delay	: time := 50 ns;
 	signal current_pc : std_logic_vector(31 downto 0) := (others => '0');
 
-    signal clk, reg_write                           : std_logic                      := '0';
+    signal clk, clk_en, reg_write                   : std_logic                      := '0';
     signal rd_addr, rd                              : std_logic_vector(4 downto 0)   := (others => '0');
     signal inst                                     : std_logic_vector(29 downto 0)  := (others => '0');
     signal pc_in, next_pc_in, rd_data, rs1d, rs2d,
@@ -90,6 +90,7 @@ begin
 	port map (
         -- inputs
 		clk => clk,
+		clk_en => clk_en,
 		reg_write => reg_write,
 		rd_addr => rd_addr,
 		inst => inst,
@@ -122,6 +123,7 @@ begin
 			rd_addr <= address;
             inst <=  instruction(31 downto 2);
 			current_pc <= next_pc_out;
+			clk_en <= '1';
 
 			wait for clock_delay;
 			clk <= '1';

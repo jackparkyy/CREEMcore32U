@@ -17,7 +17,7 @@ end u32_mem_access;
 -- define the internal organisation and operation of the memory access pipeline stage
 architecture rtl of u32_mem_access is
     signal wbsrc                    : std_logic_vector(1 downto 0)  := (others => '0');
-    signal write_en, read_en      : std_logic                     := '0';
+    signal write_en, read_en        : std_logic                     := '0';
     signal funct_rdd_reg, oper_reg  : word_vector                   := (others => '0');
 begin
     -- concurrent statements

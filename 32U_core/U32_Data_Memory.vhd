@@ -5,10 +5,10 @@ use work.u32_types.all;
 
 entity u32_data_memory is
     port (
-        clk, write_en, read_en   : in std_logic := '0';
-        funct                      : in std_logic_vector(1 downto 0) := (others => '0');
-        addr, write_data           : in word_vector := (others => '0');
-        read_data                  : out word_vector := (others => '0')
+        clk, write_en, read_en  : in std_logic := '0';
+        funct                   : in std_logic_vector(1 downto 0) := (others => '0');
+        addr, write_data        : in word_vector := (others => '0');
+        read_data               : out word_vector := (others => '0')
     );
 end u32_data_memory;
     

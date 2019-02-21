@@ -11,7 +11,7 @@ architecture behaviour of mem_access_testbench is
 	-- architecture declarations
 	constant clock_delay	: time := 50 ns;
 
-    signal clk                                  : std_logic                     := '0';
+    signal clk, clk_en                          : std_logic                     := '0';
     signal control, rd, rd_out                  : std_logic_vector(4 downto 0)  := (others => '0');
     signal funct                                : std_logic_vector(3 downto 0)  := (others => '0');
     signal alu_result, add_result, addr_const,
@@ -23,6 +23,7 @@ begin
 	mem_access : entity work.u32_mem_access
 	port map (
         clk => clk,
+        clk_en => clk_en,
         control => control,
         rd => rd,
         funct => funct,
@@ -48,6 +49,7 @@ begin
             addr_const <= passed_addr_const;
             funct <= passed_funct;
             rd <= "11111";
+            clk_en <= '1';
 
 			wait for clock_delay;
             clk <= '1';
@@ -67,7 +69,7 @@ begin
             constant inst_type : string := "LUI";
         begin
             control <= "10000";
-            test(x"FFFFFFFF", x"AAAAAAAA", x"55555555", "1111", inst_type);
+            test(x"FFFFFFFF", x"000000AA", x"55555555", "1111", inst_type);
             assert funct_rdd = x"55555555"
             report "Unexcpected result: " &
             "instruction type = " & inst_type & "; " &
@@ -80,12 +82,12 @@ begin
             constant inst_type : string := "AUIPC";
         begin
             control <= "10001";
-            test(x"FFFFFFFF", x"AAAAAAAA", x"55555555", "1111", inst_type);
-            assert funct_rdd = x"AAAAAAAA"
+            test(x"FFFFFFFF", x"000000AA", x"55555555", "1111", inst_type);
+            assert funct_rdd = x"000000AA"
             report "Unexcpected result: " &
             "instruction type = " & inst_type & "; " &
 			"funct_rdd = " & to_hex_string(funct_rdd) & "; " &
-			"expected = 0xAAAAAAAA; "
+			"expected = 0x000000AA; "
 			severity error;
         end procedure test_auipc;
 
@@ -124,7 +126,7 @@ begin
             constant inst_type : string := "OP";
         begin
             control <= "10010";
-            test(x"FFFFFFFF", x"AAAAAAAA", x"55555555", "1111", inst_type);
+            test(x"FFFFFFFF", x"000000AA", x"55555555", "1111", inst_type);
             assert funct_rdd = x"FFFFFFFF"
             report "Unexcpected result: " &
             "instruction type = " & inst_type & "; " &

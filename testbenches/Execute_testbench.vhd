@@ -11,7 +11,7 @@ architecture behaviour of execute_testbench is
 	-- architecture declarations
 	constant clock_delay	: time := 50 ns;
 
-    signal clk, pc_src                       : std_logic                      := '0';
+    signal clk, clk_en, pc_src              : std_logic                      := '0';
     signal control                          : std_logic_vector(8 downto 0)   := (others => '0');
     signal rd, control_out, rd_out          : std_logic_vector(4 downto 0)   := (others => '0');
     signal funct, funct_out                 : std_logic_vector(3 downto 0)   := (others => '0');
@@ -24,7 +24,8 @@ begin
 	execute : entity work.u32_execute
 	port map (
         -- inputs
-		clk => clk,
+        clk => clk,
+        clk_en => clk_en,
         control => control,
         rd => rd,
         funct => funct,
@@ -57,6 +58,7 @@ begin
             rs2d <= passed_rs2d;
             imm <= passed_imm;
             rd <= "11111";
+            clk_en <= '1';
 
 			wait for clock_delay;
             clk <= '1';
