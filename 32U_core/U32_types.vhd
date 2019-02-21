@@ -45,4 +45,18 @@ package u32_types is
     constant alu_sra    : nibble_vector := "1000";
     constant alu_sub    : nibble_vector := "1001";
     constant alu_pass   : nibble_vector := "1010";
+
+    function log2 (x : natural) return natural;
 end package u32_types;
+
+package body u32_types is
+    function log2 (x : natural) return natural is
+        variable i : natural := 0;
+    begin
+        i := 0;
+        while (2**i < x) and i < 31 loop
+            i := i + 1;
+        end loop;
+        return i;
+    end function;
+end package body u32_types;

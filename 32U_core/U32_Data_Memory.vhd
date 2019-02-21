@@ -29,7 +29,7 @@ architecture behavioral of u32_data_memory is
     constant half_word      : std_logic_vector(1 downto 0) := "01";
     constant word           : std_logic_vector(1 downto 0) := "10";
 begin
-    ram_addr <= to_integer(unsigned(addr));
+    ram_addr <= to_integer(unsigned(addr((log2(data_mem_size) - 1) downto 0)));
 
     data <= x"000000"   & data_ram(ram_addr)       when ram_addr = last_byte else
             x"0000"     & data_ram(ram_addr + 1)
