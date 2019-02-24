@@ -9,6 +9,10 @@ package getto_compiler is
         signal signals  : out std_logic_vector(65 downto 0)
     );
 
+    procedure nop(
+        signal signals  : out std_logic_vector(65 downto 0)
+    );
+
     procedure lui(
         constant rd     : in std_logic_vector(11 downto 7);
         constant imm    : in std_logic_vector(31 downto 12);
@@ -335,6 +339,14 @@ package body getto_compiler is
         wait;
     end procedure run;
 
+    -- pseudo instructions
+    procedure nop(
+        signal signals  : out std_logic_vector(65 downto 0)
+    ) is begin
+        addi("00000", "00000", x"000", signals);
+    end procedure nop;
+
+    -- instructions
     procedure lui(
         constant rd     : in std_logic_vector(11 downto 7);
         constant imm    : in std_logic_vector(31 downto 12);
