@@ -4,11 +4,12 @@ use work.u32_types.all;
 
 entity u32_core is
     port (
-        clk, write_en           : in std_logic      := '0';
-        write_inst, write_addr  : in word_vector    := (others => '0');
-        rd_data_out, pc_out     : out word_vector   := (others => '0');
-        rd_addr_out             : out addr_vector   := (others => '0');
-        reg_write_out           : out std_logic     := '0'
+        clk, write_en                               : in std_logic      := '0';
+        write_inst, write_addr                      : in word_vector    := (others => '0');
+        rd_data_out, imm_out, rs1d_out, rs2d_out,
+        alu_result_out, add_result_out, new_pc_out  : out word_vector   := (others => '0');
+        rd_addr_out                                 : out addr_vector   := (others => '0');
+        reg_write_out                               : out std_logic     := '0'
     );
 end u32_core;
 
@@ -140,7 +141,13 @@ begin
         reg_write => reg_write
     );
 
-    pc_out <= pc_if_d;
+
+    imm_out <= imm;
+    rs1d_out <= rs1d;
+    rs2d_out <= rs2d;
+    alu_result_out <= alu_result;
+    add_result_out <= add_result;
+    new_pc_out <= new_pc;
     rd_data_out <= rd_data;
     rd_addr_out <= rd_addr;
     reg_write_out <= reg_write;
