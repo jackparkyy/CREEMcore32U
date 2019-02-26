@@ -34,7 +34,7 @@ begin
     addrsrc_alusrc <= control(3);
     aluop1 <= control(4);
 
-    add_result_out <= add_result_reg;
+    add_result_out <= add_result_reg(xlen downto 1) & '0';
 
     operand2 <= rs2d when addrsrc_alusrc = '1' else imm;
     addoperand2 <= rs1d when addsrc_aluop0 = '1' else pc;
