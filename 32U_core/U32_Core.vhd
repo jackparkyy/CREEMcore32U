@@ -9,7 +9,7 @@ entity u32_core is
         rd_data_out, imm_out, rs1d_out, rs2d_out,
         alu_result_out, add_result_out, new_pc_out  : out word_vector   := (others => '0');
         rd_addr_out                                 : out addr_vector   := (others => '0');
-        reg_write_out                               : out std_logic     := '0'
+        reg_write_out, pc_src_out                   : out std_logic     := '0'
     );
 end u32_core;
 
@@ -148,6 +148,7 @@ begin
     alu_result_out <= alu_result;
     add_result_out <= add_result;
     new_pc_out <= new_pc;
+    pc_src_out <= pc_src;
     rd_data_out <= rd_data;
     rd_addr_out <= rd_addr;
     reg_write_out <= reg_write;

@@ -9,11 +9,12 @@ end core_testbench;
 -- define the internal organisation and operation of the core
 architecture behaviour of core_testbench is
 	-- architecture declarations
-    signal clk, write_en, reg_write_out                 : std_logic                     := '0';
-    signal write_inst, write_addr, rd_data_out, pc_out  : std_logic_vector(31 downto 0) := (others => '0');
-    signal rd_addr_out                                  : std_logic_vector(4 downto 0)  := (others => '0');
-
-    signal signals : std_logic_vector(65 downto 0) := (others => '0');
+    signal clk, write_en, reg_write, pc_src : std_logic                     := '0';
+    signal write_inst, write_addr, rd_data,
+            imm, rs1d, rs2d, alu_result,
+            add_result, new_pc              : std_logic_vector(31 downto 0) := (others => '0');
+    signal rd_addr                          : std_logic_vector(4 downto 0)  := (others => '0');
+    signal signals                          : std_logic_vector(65 downto 0) := (others => '0');
 -- concurrent statements
 begin    
     -- instantiate core
@@ -25,10 +26,16 @@ begin
         write_inst => write_inst,
         write_addr => write_addr,
         -- outputs
-        pc_out => pc_out,
-        rd_data_out => rd_data_out,
-        rd_addr_out => rd_addr_out,
-        reg_write_out => reg_write_out
+        imm_out => imm,
+        rs1d_out => rs1d,
+        rs2d_out => rs2d,
+        alu_result_out => alu_result,
+        add_result_out => add_result,
+        new_pc_out => new_pc,
+        pc_src_out => pc_src,
+        rd_data_out => rd_data,
+        rd_addr_out => rd_addr,
+        reg_write_out => reg_write
     );
 
     -- combine signals to pass to make it easier to pass to the compiler
@@ -38,13 +45,31 @@ begin
     write_addr <= signals(31 downto 0);
 	
     process begin
-        lui("00001", x"00001", signals);
-        addi("00000", "00000", x"000", signals); -- NOP
-        addi("00000", "00000", x"000", signals); -- NOP
-        srli("00001", "00001", "01100", signals);
-        addi("00000", "00000", x"000", signals); -- NOP
-        addi("00000", "00000", x"000", signals); -- NOP
-        addi("00010", "00001", x"001", signals);
+        -- 0
+        lui(31, 1, signals); -- x31 = 4096
+        -- 1
+        lui(30, -524288, signals); -- x30 = -2147483648
+        -- 2
+        auipc(29, 1, signals); -- x29 = 2 + 4096 (PC + constant) = 4098
+        -- 3
+        srli(31, 31, 12, signals); -- x31 = 4096 >> 12 (x31 >> constant) = 1
+        -- 4
+        nop(signals);
+        -- 5
+        nop(signals);
+        -- 6
+        addi(27, 31, 50, signals); -- x27 = 1 + 50 (x31 - constant) = 51
+        -- 7
+        op_add(28, 31, 30, signals); -- x28 = 1 + -2147483648 (x31 + x30) = -2147483647
+        -- 8        
+        nop(signals);
+        -- 9
+        sw(27, 29, 0, signals); -- data_addr[51 + 0] = 4098 (data_addr[rs1 + imm] = rs2)
+        -- 10
+        lw(26, 27, 0, signals);
         run(signals);
+        --beq(31, 31, -1, signals);
+        --jal(0, -1, signals);
+        --jalr("00000", "11111", x"002", signals);
 	end process;
 end behaviour;
