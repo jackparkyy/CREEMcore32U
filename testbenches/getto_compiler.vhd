@@ -11,6 +11,7 @@ package getto_compiler is
     subtype load_store_imm is natural range 0 to 4096;
     subtype u_imm is integer range -524288 to 524287;
     subtype j_imm is integer range -524288 to 524287;
+    subtype b_imm is integer range  -2048 to 2047;
     subtype shamt_imm is natural range 0 to 31;
 
     procedure run(
@@ -53,7 +54,7 @@ package getto_compiler is
     procedure beq(
         constant rs1    : in reg_addr;
         constant rs2    : in reg_addr;
-        constant offset : in std_logic_vector(12 downto 1);
+        constant imm : in b_imm;
 
         signal signals  : out std_logic_vector(65 downto 0)            
     );
@@ -61,7 +62,7 @@ package getto_compiler is
     procedure bne(
         constant rs1    : in reg_addr;
         constant rs2    : in reg_addr;
-        constant offset : in std_logic_vector(12 downto 1);
+        constant imm : in b_imm;
 
         signal signals  : out std_logic_vector(65 downto 0)            
     );
@@ -69,7 +70,7 @@ package getto_compiler is
     procedure blt(
         constant rs1    : in reg_addr;
         constant rs2    : in reg_addr;
-        constant offset : in std_logic_vector(12 downto 1);
+        constant imm : in b_imm;
 
         signal signals  : out std_logic_vector(65 downto 0)            
     );
@@ -77,7 +78,7 @@ package getto_compiler is
     procedure bge(
         constant rs1    : in reg_addr;
         constant rs2    : in reg_addr;
-        constant offset : in std_logic_vector(12 downto 1);
+        constant imm : in b_imm;
 
         signal signals  : out std_logic_vector(65 downto 0)            
     );
@@ -85,7 +86,7 @@ package getto_compiler is
     procedure bltu(
         constant rs1    : in reg_addr;
         constant rs2    : in reg_addr;
-        constant offset : in std_logic_vector(12 downto 1);
+        constant imm : in b_imm;
 
         signal signals  : out std_logic_vector(65 downto 0)            
     );
@@ -93,7 +94,7 @@ package getto_compiler is
     procedure bgeu(
         constant rs1    : in reg_addr;
         constant rs2    : in reg_addr;
-        constant offset : in std_logic_vector(12 downto 1);
+        constant imm : in b_imm;
 
         signal signals  : out std_logic_vector(65 downto 0)            
     );
@@ -324,7 +325,7 @@ package body getto_compiler is
     ) is begin
         signals(64) <= '1';
         signals(63 downto 32) <= inst;
-        report "laoded inst (" & to_string(inst) & ")" severity note;
+        --report "laoded inst (" & to_string(inst) & ")" severity note;
 
         wait for clock_delay;
         signals(65) <= '1';
@@ -414,14 +415,16 @@ package body getto_compiler is
     procedure beq(
         constant rs1    : in reg_addr;
         constant rs2    : in reg_addr;
-        constant offset : in std_logic_vector(12 downto 1);
+        constant imm : in b_imm;
 
         signal signals  : out std_logic_vector(65 downto 0)            
     ) is
         constant funct3     : std_logic_vector(14 downto 12)    := "000";
         constant opcode     : std_logic_vector(6 downto 0)      := "1100011";
         variable inst       : std_logic_vector(31 downto 0);
+        variable offset    : std_logic_vector(12 downto 1);
     begin
+        offset := std_logic_vector(to_unsigned(imm, 12));
         inst := offset(12) & offset(10 downto 5) & std_logic_vector(to_unsigned(rs2, 5)) & std_logic_vector(to_unsigned(rs1, 5)) & funct3 & offset(4 downto 1) & offset(11) & opcode;
         load_inst(inst, signals);
     end procedure beq;
@@ -429,14 +432,16 @@ package body getto_compiler is
     procedure bne(
         constant rs1    : in reg_addr;
         constant rs2    : in reg_addr;
-        constant offset : in std_logic_vector(12 downto 1);
+        constant imm : in b_imm;
 
         signal signals  : out std_logic_vector(65 downto 0)            
     ) is
         constant funct3     : std_logic_vector(14 downto 12)    := "001";
         constant opcode     : std_logic_vector(6 downto 0)      := "1100011";
         variable inst       : std_logic_vector(31 downto 0);
+        variable offset    : std_logic_vector(12 downto 1);
     begin
+        offset := std_logic_vector(to_unsigned(imm, 12));
         inst := offset(12) & offset(10 downto 5) & std_logic_vector(to_unsigned(rs2, 5)) & std_logic_vector(to_unsigned(rs1, 5)) & funct3 & offset(4 downto 1) & offset(11) & opcode;
         load_inst(inst, signals);
     end procedure bne;
@@ -444,14 +449,16 @@ package body getto_compiler is
     procedure blt(
         constant rs1    : in reg_addr;
         constant rs2    : in reg_addr;
-        constant offset : in std_logic_vector(12 downto 1);
+        constant imm : in b_imm;
 
         signal signals  : out std_logic_vector(65 downto 0)            
     ) is
         constant funct3     : std_logic_vector(14 downto 12)    := "100";
         constant opcode     : std_logic_vector(6 downto 0)      := "1100011";
         variable inst       : std_logic_vector(31 downto 0);
+        variable offset    : std_logic_vector(12 downto 1);
     begin
+        offset := std_logic_vector(to_unsigned(imm, 12));
         inst := offset(12) & offset(10 downto 5) & std_logic_vector(to_unsigned(rs2, 5)) & std_logic_vector(to_unsigned(rs1, 5)) & funct3 & offset(4 downto 1) & offset(11) & opcode;
         load_inst(inst, signals);
     end procedure blt;
@@ -459,14 +466,16 @@ package body getto_compiler is
     procedure bge(
         constant rs1    : in reg_addr;
         constant rs2    : in reg_addr;
-        constant offset : in std_logic_vector(12 downto 1);
+        constant imm : in b_imm;
 
         signal signals  : out std_logic_vector(65 downto 0)            
     ) is
         constant funct3     : std_logic_vector(14 downto 12)    := "101";
         constant opcode     : std_logic_vector(6 downto 0)      := "1100011";
         variable inst       : std_logic_vector(31 downto 0);
+        variable offset    : std_logic_vector(12 downto 1);
     begin
+        offset := std_logic_vector(to_unsigned(imm, 12));
         inst := offset(12) & offset(10 downto 5) & std_logic_vector(to_unsigned(rs2, 5)) & std_logic_vector(to_unsigned(rs1, 5)) & funct3 & offset(4 downto 1) & offset(11) & opcode;
         load_inst(inst, signals);
     end procedure bge;
@@ -474,14 +483,16 @@ package body getto_compiler is
     procedure bltu(
         constant rs1    : in reg_addr;
         constant rs2    : in reg_addr;
-        constant offset : in std_logic_vector(12 downto 1);
+        constant imm : in b_imm;
 
         signal signals  : out std_logic_vector(65 downto 0)            
     ) is
         constant funct3     : std_logic_vector(14 downto 12)    := "110";
         constant opcode     : std_logic_vector(6 downto 0)      := "1100011";
         variable inst       : std_logic_vector(31 downto 0);
+        variable offset    : std_logic_vector(12 downto 1);
     begin
+        offset := std_logic_vector(to_unsigned(imm, 12));
         inst := offset(12) & offset(10 downto 5) & std_logic_vector(to_unsigned(rs2, 5)) & std_logic_vector(to_unsigned(rs1, 5)) & funct3 & offset(4 downto 1) & offset(11) & opcode;
         load_inst(inst, signals);
     end procedure bltu;
@@ -489,14 +500,16 @@ package body getto_compiler is
     procedure bgeu(
         constant rs1    : in reg_addr;
         constant rs2    : in reg_addr;
-        constant offset : in std_logic_vector(12 downto 1);
+        constant imm : in b_imm;
 
         signal signals  : out std_logic_vector(65 downto 0)            
     ) is
         constant funct3     : std_logic_vector(14 downto 12)    := "111";
         constant opcode     : std_logic_vector(6 downto 0)      := "1100011";
         variable inst       : std_logic_vector(31 downto 0);
+        variable offset    : std_logic_vector(12 downto 1);
     begin
+        offset := std_logic_vector(to_unsigned(imm, 12));
         inst := offset(12) & offset(10 downto 5) & std_logic_vector(to_unsigned(rs2, 5)) & std_logic_vector(to_unsigned(rs1, 5)) & funct3 & offset(4 downto 1) & offset(11) & opcode;
         load_inst(inst, signals);
     end procedure bgeu;
