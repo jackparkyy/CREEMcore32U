@@ -9,15 +9,25 @@ end execute_testbench;
 -- define the internal organisation and operation of the alu
 architecture behaviour of execute_testbench is
 	-- architecture declarations
-	constant clock_delay	: time := 50 ns;
+	constant clock_delay	: time := 10 ns;
 
-    signal clk, clk_en, pc_src              : std_logic                      := '0';
-    signal control                          : std_logic_vector(8 downto 0)   := (others => '0');
-    signal rd, control_out, rd_out          : std_logic_vector(4 downto 0)   := (others => '0');
-    signal funct, funct_out                 : std_logic_vector(3 downto 0)   := (others => '0');
-    signal rs1d, rs2d, imm, pc, next_pc,
-            alu_result, add_result,
-            add_result_out, addr_const      : std_logic_vector(31 downto 0)  := (others => '0');
+    signal clk, clk_en                  : std_logic                      := '0';
+    signal control                      : std_logic_vector(8 downto 0)   := (others => '0');
+    signal rd                           : std_logic_vector(4 downto 0)   := (others => '0');
+    signal funct                        : std_logic_vector(3 downto 0)   := (others => '0');
+    signal rs1d, rs2d, imm, pc, next_pc : std_logic_vector(31 downto 0)  := (others => '0');
+
+    signal pc_src                       : std_logic;
+    signal control_out, rd_out          : std_logic_vector(4 downto 0);
+    signal funct_out                    : std_logic_vector(3 downto 0);
+    signal alu_result, add_result,
+            add_result_out, addr_const  : std_logic_vector(31 downto 0);
+
+    signal first                                        : std_logic := '1';
+    signal previous_passed_funct                        : std_logic_vector(3 downto 0);
+    signal previous_passed_imm, previous_passed_rs2d,
+            previous_expected, previous_passed_pc       : std_logic_vector(31 downto 0);
+    signal previous_inst_type                           : string(1 to 6);
 -- concurrent statements
 begin
 	-- instantiate alu_controller
@@ -43,16 +53,17 @@ begin
         add_result_out => add_result_out,
         addr_const => addr_const,
         pc_src => pc_src
-	);
-	
+    );    
 	process
 		procedure test(
             constant passed_rs1d, passed_rs2d, passed_imm   : in std_logic_vector(31 downto 0);
-            constant passed_pc_src                           : in std_logic;
+            constant passed_pc_src                          : in std_logic;
             constant passed_funct                           : in std_logic_vector(3 downto 0);
-            constant inst_type                              : in string
+            constant inst_type                              : in string;
+            constant expected                               : in std_logic_vector(31 downto 0)
 		) is
         begin
+            wait for 1 ps;
             funct <= passed_funct;
             rs1d <= passed_rs1d;
             rs2d <= passed_rs2d;
@@ -60,108 +71,151 @@ begin
             rd <= "11111";
             clk_en <= '1';
 
-			wait for clock_delay;
+            previous_passed_funct <= passed_funct after (clock_delay * 2) - 1 ps;
+            previous_passed_imm <= passed_imm after (clock_delay * 2) - 1 ps;
+            previous_inst_type <= inst_type after (clock_delay * 2) - 1 ps;
+            previous_expected <= expected after (clock_delay * 2) - 1 ps;
+
+            if first = '0' then
+                wait for 3 ns - 1 ps;
+                assert funct_out = previous_passed_funct
+                report "Unexcpected funct_out: " &
+                "instruction type = " & previous_inst_type & "; "
+                severity error;
+
+                assert rd_out = "11111"
+                report "Unexcpected rd_out: " &
+                "instruction type = " & previous_inst_type & "; " &
+                "expected = 11111; "
+                severity error;
+
+                case previous_inst_type is
+                    when "LUI   " =>
+                        assert addr_const = previous_passed_imm
+                        report "Unexcpected addr_const: " &
+                        "instruction type = " & previous_inst_type & "; "
+                        severity error;
+                    when "AUIPC " =>
+                        assert add_result = previous_expected
+                        report "Unexcpected add_result: " &
+                        "instruction type = " & previous_inst_type & "; "
+                        severity error;
+                    when "JAL   " =>
+                        assert addr_const = (previous_passed_pc + x"00000004")
+                        report "Unexcpected addr_const: " &
+                        "instruction type = " & previous_inst_type & "; "
+                        severity error;
+                    when "JALR  " =>
+                        assert addr_const = x"FFFFFFFF"
+                        report "Unexcpected addr_const: " &
+                        "instruction type = " & previous_inst_type & "; " &
+                        "expected = 0xFFFFFFFF; "
+                        severity error;
+                    when "LOAD  " =>
+                        assert add_result = previous_expected
+                        report "Unexcpected add_result: " &
+                        "instruction type = " & previous_inst_type & "; "
+                        severity error;
+                    when "STORE " =>
+                        assert add_result = previous_expected
+                        report "Unexcpected add_result: " &
+                        "instruction type = " & previous_inst_type & "; "
+                        severity error;
+                        assert alu_result = previous_passed_rs2d
+                        report "Unexcpected alu_result: " &
+                        "instruction type = " & previous_inst_type & "; "
+                        severity error;
+                    when "OP_IMM" =>
+                        assert alu_result = previous_expected
+                        report "Unexcpected result: " &
+                        "instruction type = " & previous_inst_type & "; "
+                        severity error;
+                    when "OP    " =>
+                        assert alu_result = previous_expected
+                        report "Unexcpected alu_result: " &
+                        "instruction type = " & previous_inst_type & "; "
+                        severity error;
+                    when others =>
+                        null;
+                end case;
+
+                wait for clock_delay - 3 ns;
+            else
+                first <= '0';
+                wait for clock_delay - 1 ps;
+            end if;
+
             clk <= '1';
-			wait for clock_delay;
-			clk <= '0';
-            
-            wait for 1 ps;
-            assert funct_out = passed_funct
-            report "Unexcpected result: " &
-            "instruction type = " & inst_type & "; " &
-			"funct_out = " & to_string(funct_out) & "; " &
-			"expected = 1111; "
-            severity error;
-            
-            assert rd_out = "11111"
-            report "Unexcpected result: " &
-            "instruction type = " & inst_type & "; " &
-			"rd_out = " & to_string(rd_out) & "; " &
-			"expected = 11111; "
-            severity error;
-            
+
+            wait for clock_delay - 2 ps;
             assert pc_src = passed_pc_src
-            report "Unexcpected result: " &
-            "instruction type = " & inst_type & "; " &
-			"pc_src = " & to_string(pc_src) & "; " &
-			"expected = " & to_string(passed_pc_src) & "; "
-			severity error;
+            report "Unexcpected pc_src: " &
+            "instruction type = " & inst_type & "; "
+            severity error;
+
+            case inst_type is
+                when "JAL   " =>
+                    assert add_result_out = expected
+                    report "Unexcpected add_result_out: " &
+                    "instruction type = " & inst_type & "; "
+                    severity error;
+                when "JALR  " =>
+                    assert add_result_out = expected
+                    report "Unexcpected add_result_out: " &
+                    "instruction type = " & inst_type & "; "
+                    severity error;
+                when "BRANCH" =>
+                    assert add_result_out = expected
+                    report "Unexcpected add_result_out: " &
+                    "instruction type = " & inst_type & "; "
+                    severity error;
+                when others =>
+                    null;
+            end case;
+            
+            wait for 2 ps;
+            clk <= '0';
         end procedure test;
 
         procedure test_lui(
             constant passed_imm    : in std_logic_vector(31 downto 0)
         ) is
-            constant inst_type : string := "LUI";
+            constant inst_type : string := "LUI   ";
         begin
             control <= "100001000";
-            test(x"FFFFFFFF", x"FFFFFFFF", passed_imm, '0', "1111", inst_type);
-            assert addr_const = passed_imm
-            report "Unexcpected result: " &
-            "instruction type = " & inst_type & "; " &
-			"addr_const = " & to_hex_string(addr_const) & "; " &
-			"expected = " & to_hex_string(passed_imm) & "; "
-			severity error;
+            test(x"FFFFFFFF", x"FFFFFFFF", passed_imm, '0', "1111", inst_type, x"00000000");
         end procedure test_lui;
 
         procedure test_auipc(
             constant passed_imm, passed_pc, expected   : in std_logic_vector(31 downto 0)
         ) is
-            constant inst_type : string := "AUIPC";
+            constant inst_type : string := "AUIPC ";
         begin
             control <= "100010000";
             pc <= passed_pc;
-            test(x"FFFFFFFF", x"FFFFFFFF", passed_imm, '0', "1111", inst_type);
-            assert add_result = expected
-            report "Unexcpected result: " &
-            "instruction type = AUIPC; " &
-			"add_result = " & to_hex_string(add_result) & "; " &
-			"expected = " & to_hex_string(expected) & "; "
-			severity error;
+            test(x"FFFFFFFF", x"FFFFFFFF", passed_imm, '0', "1111", inst_type, expected);
         end procedure test_auipc;
 
         procedure test_jal(
             constant passed_imm, passed_pc, expected   : in std_logic_vector(31 downto 0)
         ) is
-            constant inst_type : string := "JAL";
+            constant inst_type : string := "JAL   ";
         begin
             control <= "100000001";
             pc <= passed_pc;
             next_pc <= passed_pc + x"00000004";
-            test(x"FFFFFFFF", x"FFFFFFFF", passed_imm, '1', "1111", inst_type);
-            assert addr_const = (passed_pc + x"00000004")
-            report "Unexcpected result: " &
-            "instruction type = " & inst_type & "; " &
-			"addr_const = " & to_hex_string(addr_const) & "; " &
-			"expected = " & to_hex_string(passed_pc + x"00000004") & "; "
-            severity error;
-            assert add_result_out = expected
-            report "Unexcpected result: " &
-            "instruction type = " & inst_type & "; " &
-			"add_result_out = " & to_hex_string(add_result_out) & "; " &
-			"expected = " & to_hex_string(expected) & "; "
-            severity error;
+            previous_passed_pc <= passed_pc after (clock_delay * 2) - 1 ps;
+            test(x"FFFFFFFF", x"FFFFFFFF", passed_imm, '1', "1111", inst_type, expected);
         end procedure test_jal;
 
         procedure test_jalr(
             constant passed_rs1d, passed_imm, expected  : in std_logic_vector(31 downto 0)
         ) is
-            constant inst_type : string := "JALR";
+            constant inst_type : string := "JALR  ";
         begin
             control <= "100000101";
             next_pc <= x"FFFFFFFF";
-            test(passed_rs1d, x"FFFFFFFF", passed_imm, '1', "1111", inst_type);
-            assert addr_const = x"FFFFFFFF"
-            report "Unexcpected result: " &
-            "instruction type = " & inst_type & "; " &
-			"addr_const = " & to_hex_string(addr_const) & "; " &
-			"expected = 0xFFFFFFFF; "
-            severity error;
-            assert add_result_out = expected
-            report "Unexcpected result: " &
-            "instruction type = " & inst_type & "; " &
-			"add_result_out = " & to_hex_string(add_result_out) & "; " &
-			"expected = " & to_hex_string(expected) & "; "
-            severity error;
+            test(passed_rs1d, x"FFFFFFFF", passed_imm, '1', "1111", inst_type, expected);
         end procedure test_jalr;
 
         procedure test_branch(
@@ -173,53 +227,27 @@ begin
         begin
             control <= "000011010";
             pc <= passed_pc;
-            test(passed_rs1d, passed_rs2d, passed_imm, branch_taken, passed_funct, inst_type);
-            assert add_result_out = expected
-            report "Unexcpected result: " &
-            "instruction type = " & inst_type & "; " &
-            "funct = " & to_string(passed_funct) & "; " &
-			"add_result_out = " & to_hex_string(add_result_out) & "; " &
-			"expected = " & to_hex_string(expected) & "; "
-            severity error;
+            test(passed_rs1d, passed_rs2d, passed_imm, branch_taken, passed_funct, inst_type, expected);
         end procedure test_branch;
 
         procedure test_load(
             constant passed_rs1d, passed_imm, expected  : in std_logic_vector(31 downto 0)
         ) is
-            constant inst_type : string := "LOAD";
+            constant inst_type : string := "LOAD  ";
         begin
             control <= "110110100";
-            test(passed_rs1d, x"FFFFFFFF", passed_imm, '0', "1111", inst_type);
-            assert add_result = expected
-            report "Unexcpected result: " &
-            "instruction type = " & inst_type & "; " &
-			"add_result = " & to_hex_string(add_result) & "; " &
-			"expected = " & to_hex_string(expected) & "; "
-            severity error;
+            test(passed_rs1d, x"FFFFFFFF", passed_imm, '0', "1111", inst_type, expected);
         end procedure test_load;
 
         procedure test_store(
             constant passed_rs1d, passed_rs2d, passed_imm, expected  : in std_logic_vector(31 downto 0);
             constant passed_funct   : in std_logic_vector(3 downto 0)
         ) is	
-            constant inst_type : string := "STORE";
+            constant inst_type : string := "STORE ";
         begin
             control <= "001011100";
-            test(passed_rs1d, passed_rs2d, passed_imm, '0', passed_funct, inst_type);
-            assert add_result = expected
-            report "Unexcpected result: " &
-            "instruction type = " & inst_type & "; " &
-            "funct = " & to_string(passed_funct) & "; " &
-			"add_result = " & to_hex_string(add_result) & "; " &
-			"expected = " & to_hex_string(expected) & "; "
-            severity error;
-            assert alu_result = passed_rs2d
-            report "Unexcpected result: " &
-            "instruction type = " & inst_type & "; " &
-            "funct = " & to_string(passed_funct) & "; " &
-			"alu_result = " & to_hex_string(alu_result) & "; " &
-			"expected = " & to_hex_string(passed_rs2d) & "; "
-            severity error;
+            previous_passed_rs2d <= passed_rs2d  after (clock_delay * 2) - 1 ps;
+            test(passed_rs1d, passed_rs2d, passed_imm, '0', passed_funct, inst_type, expected);
         end procedure test_store;
 
         procedure test_opimm(
@@ -229,31 +257,17 @@ begin
             constant inst_type : string := "OP-IMM";
         begin
             control <= "100100000";
-            test(passed_rs1d, x"FFFFFFFF", passed_imm, '0', passed_funct, inst_type);
-            assert alu_result = expected
-            report "Unexcpected result: " &
-            "instruction type = " & inst_type & "; " &
-            "funct = " & to_string(passed_funct) & "; " &
-			"alu_result = " & to_hex_string(alu_result) & "; " &
-			"expected = " & to_hex_string(expected) & "; "
-            severity error;
+            test(passed_rs1d, x"FFFFFFFF", passed_imm, '0', passed_funct, inst_type, expected);
         end procedure test_opimm;
 
         procedure test_op(
             constant passed_rs1d, passed_rs2d, expected  : in std_logic_vector(31 downto 0);
             constant passed_funct   : in std_logic_vector(3 downto 0)
         ) is
-            constant inst_type : string := "OP";
+            constant inst_type : string := "OP    ";
         begin
             control <= "100101100";
-            test(passed_rs1d, passed_rs2d, x"FFFFFFFF", '0', passed_funct, inst_type);
-            assert alu_result = expected
-            report "Unexcpected result: " &
-            "instruction type = " & inst_type & "; " &
-            "funct = " & to_string(passed_funct) & "; " &
-			"alu_result = " & to_hex_string(alu_result) & "; " &
-			"expected = " & to_hex_string(expected) & "; "
-            severity error;
+            test(passed_rs1d, passed_rs2d, x"FFFFFFFF", '0', passed_funct, inst_type, expected);
         end procedure test_op;
 	begin
         test_lui(x"401000B3");
