@@ -9,7 +9,7 @@ end gp_registers_testbench;
 -- define the internal organisation and operation of the alu
 architecture behaviour of gp_registers_testbench is
 	-- architecture declarations
-	constant clock_delay	: time := 50 ns;
+	constant clock_delay	: time := 10 ns;
 
     signal clk, reg_write              	: std_logic := '0';
 	signal rs1_addr, rs2_addr, rd_addr	: std_logic_vector(4 downto 0) := (others => '0');
@@ -47,17 +47,11 @@ begin
 			clk <= '0';
 
 			assert rs1_data = expected1
-			report "Unexpected data: " &
-			"rs1_addr = 0x" & to_hex_string(rs1_data) & "; " &
-			"rs1_data = " & to_string(rs1_addr) & "; " &
-			"expected = 0x" & to_hex_string(expected1) & "; "
+			report "Unexpected data"
 			severity error;
 
 			assert rs2_data = expected2
-			report "Unexpected data: " &
-			"rs1_addr = 0x" & to_hex_string(rs2_data) & "; " &
-			"rs1_data = " & to_string(rs2_addr) & "; " &
-			"expected = 0x" & to_hex_string(expected2) & "; "
+			report "Unexpected data"
 			severity error;
 		end procedure test_read;
 
@@ -93,11 +87,9 @@ begin
 			wait for clock_delay;
 			clk <= '0';
 			
-			report "Read & Wrote data: " &
-			"rd = " & to_string(rd_addr) & "; " &
-			"data = 0x" & to_hex_string(rd_data) & "; " &
-			"rs1 = 0x" & to_hex_string(rs1_data) & "; "
-			severity note;
+			assert rs1_data = data
+			report "Unexpected data"
+			severity error;
 		end procedure test_rw;
 
 		procedure test_read_all(
@@ -124,15 +116,17 @@ begin
 			end loop;
 		end procedure test_write_all;
 	begin
-		test_read_all(x"00000000");
-		test_write_all(x"FFFFFFFF");
-		test_read_all(x"FFFFFFFF");
-		test_write_all(x"AAAAAAAA");
-		test_read_all(x"AAAAAAAA");
-		test_write_all(x"55555555");
-		test_read_all(x"55555555");
-		test_write_all(x"00000000");
-		test_read_all(x"00000000");
+		test_rw("00001", x"FFFFFFFF");
+		test_rw("01000", x"FFFFFFFF");
+		--test_read_all(x"00000000");
+		--test_write_all(x"FFFFFFFF");
+		--test_read_all(x"FFFFFFFF");
+		--test_write_all(x"AAAAAAAA");
+		--test_read_all(x"AAAAAAAA");
+		--(x"55555555");
+		--test_read_all(x"55555555");
+		--test_write_all(x"00000000");
+		--test_read_all(x"00000000");
 		wait;
 	end process;
 end behaviour;
