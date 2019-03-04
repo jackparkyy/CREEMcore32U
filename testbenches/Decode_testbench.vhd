@@ -9,7 +9,7 @@ end decode_testbench;
 -- define the internal organisation and operation of the alu
 architecture behaviour of decode_testbench is
 	-- architecture declarations
-	constant clock_delay	: time := 50 ns;
+	constant clock_delay	: time := 10 ns;
 	signal current_pc : std_logic_vector(31 downto 0) := (others => '0');
 
     signal clk, clk_en, reg_write                   : std_logic                      := '0';

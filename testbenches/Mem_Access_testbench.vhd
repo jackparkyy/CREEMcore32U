@@ -9,7 +9,7 @@ end mem_access_testbench;
 -- define the internal organisation and operation of the alu
 architecture behaviour of mem_access_testbench is
 	-- architecture declarations
-	constant clock_delay	: time := 50 ns;
+	constant clock_delay	: time := 10 ns;
 
     signal clk, clk_en                          : std_logic                     := '0';
     signal control, rd, rd_out                  : std_logic_vector(4 downto 0)  := (others => '0');

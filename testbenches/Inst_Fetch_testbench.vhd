@@ -10,7 +10,7 @@ end inst_fetch_testbench;
 -- define the internal organisation and operation of the instruction fetch pipeline stage
 architecture behaviour of inst_fetch_testbench is
     -- architecture declarations
-    constant clock_delay	: time := 50 ns;
+    constant clock_delay	: time := 10 ns;
 
 	signal clk, write_en, pc_src            : std_logic      := '0';
     signal write_inst, write_addr, new_pc,

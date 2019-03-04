@@ -9,7 +9,7 @@ end data_memory_testbench;
 -- define the internal organisation and operation of the alu
 architecture behaviour of data_memory_testbench is
 	-- architecture declarations
-	constant clock_delay	: time := 50 ns;
+	constant clock_delay	: time := 10 ns;
 
     signal clk, write_en, read_en     : std_logic := '0';
 	signal addr, write_data, read_data 	: std_logic_vector(31 downto 0) := (others => '0');
