@@ -48,28 +48,34 @@ begin
         -- 0
         lui(31, 1, signals); -- x31 = 4096
         -- 1
-        lui(30, -524288, signals); -- x30 = -2147483648
+        nop(signals);
         -- 2
-        auipc(29, 1, signals); -- x29 = 2 + 4096 (PC + constant) = 4098
+        nop(signals);
         -- 3
+        auipc(30, 1, signals); -- x29 = 3 + 4096 (PC + constant) = 4099
+        -- 4
+        jal(0, 3, signals);
+        -- 5
         srli(31, 31, 12, signals); -- x31 = 4096 >> 12 (x31 >> constant) = 1
         -- 4
-        nop(signals);
+        op_sub(28, 31, 30, signals); -- x28 = 1 + -2147483648 (x31 + x30) = -2147483647
         -- 5
-        nop(signals);
-        -- 6
         addi(27, 31, 50, signals); -- x27 = 1 + 50 (x31 - constant) = 51
-        -- 7
+        -- 5
+        jal(0, 3, signals);
+        -- 6
         op_add(28, 31, 30, signals); -- x28 = 1 + -2147483648 (x31 + x30) = -2147483647
-        -- 8        
+        -- 7        
         nop(signals);
-        -- 9
-        sw(27, 29, 0, signals); -- data_addr[51 + 0] = 4098 (data_addr[rs1 + imm] = rs2)
+        -- 8
+        bne(31, 30, -1, signals);
         -- 10
+        sw(27, 30, 0, signals); -- data_addr[51 + 0] = 4097 (data_addr[rs1 + imm] = rs2)
+        -- 11
         lw(26, 27, 0, signals);
         run(signals);
         --beq(31, 31, -1, signals);
-        --jal(0, -1, signals);
         --jalr("00000", "11111", x"002", signals);
+        --lui(30, -524288, signals); -- x30 = -2147483648
 	end process;
 end behaviour;
