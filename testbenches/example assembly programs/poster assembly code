@@ -1,0 +1,24 @@
+-- 0
+lui(31, 1, signals); -- x31 = 4096
+-- 1
+nop(signals);
+-- 2
+jal(1, 2, signals); -- PC = 6
+-- 3
+nop(signals);
+-- 4
+sw(30, 31, 0, signals); -- data_addr[16 + 0] = 4096 (data_addr[rs1 + imm] = rs2)
+-- 5
+lw(29, 30, 0, signals); -- x29 = data_addr[16 + 0] (data_addr[rs1 + imm] = rs2)
+-- 6
+srli(30, 31, 8, signals); -- x30 = 4096 >> 8 (x31 >> constant) = 16
+-- 7
+nop(signals);
+-- 8
+nop(signals);
+-- 9
+bne(30, 31, -2, signals); -- if x30 != x31, PC = 4
+nop(signals);
+nop(signals);
+nop(signals);
+run(signals);
