@@ -424,7 +424,7 @@ package body getto_compiler is
         variable inst       : std_logic_vector(31 downto 0);
         variable offset    : std_logic_vector(12 downto 1);
     begin
-        offset := std_logic_vector(to_unsigned(imm, 12));
+        offset := std_logic_vector(to_signed(imm, 12));
         inst := offset(12) & offset(10 downto 5) & std_logic_vector(to_unsigned(rs2, 5)) & std_logic_vector(to_unsigned(rs1, 5)) & funct3 & offset(4 downto 1) & offset(11) & opcode;
         load_inst(inst, signals);
     end procedure beq;
@@ -441,7 +441,7 @@ package body getto_compiler is
         variable inst       : std_logic_vector(31 downto 0);
         variable offset    : std_logic_vector(12 downto 1);
     begin
-        offset := std_logic_vector(to_unsigned(imm, 12));
+        offset := std_logic_vector(to_signed(imm, 12));
         inst := offset(12) & offset(10 downto 5) & std_logic_vector(to_unsigned(rs2, 5)) & std_logic_vector(to_unsigned(rs1, 5)) & funct3 & offset(4 downto 1) & offset(11) & opcode;
         load_inst(inst, signals);
     end procedure bne;
@@ -458,7 +458,7 @@ package body getto_compiler is
         variable inst       : std_logic_vector(31 downto 0);
         variable offset    : std_logic_vector(12 downto 1);
     begin
-        offset := std_logic_vector(to_unsigned(imm, 12));
+        offset := std_logic_vector(to_signed(imm, 12));
         inst := offset(12) & offset(10 downto 5) & std_logic_vector(to_unsigned(rs2, 5)) & std_logic_vector(to_unsigned(rs1, 5)) & funct3 & offset(4 downto 1) & offset(11) & opcode;
         load_inst(inst, signals);
     end procedure blt;
@@ -475,7 +475,7 @@ package body getto_compiler is
         variable inst       : std_logic_vector(31 downto 0);
         variable offset    : std_logic_vector(12 downto 1);
     begin
-        offset := std_logic_vector(to_unsigned(imm, 12));
+        offset := std_logic_vector(to_signed(imm, 12));
         inst := offset(12) & offset(10 downto 5) & std_logic_vector(to_unsigned(rs2, 5)) & std_logic_vector(to_unsigned(rs1, 5)) & funct3 & offset(4 downto 1) & offset(11) & opcode;
         load_inst(inst, signals);
     end procedure bge;
@@ -492,7 +492,7 @@ package body getto_compiler is
         variable inst       : std_logic_vector(31 downto 0);
         variable offset    : std_logic_vector(12 downto 1);
     begin
-        offset := std_logic_vector(to_unsigned(imm, 12));
+        offset := std_logic_vector(to_signed(imm, 12));
         inst := offset(12) & offset(10 downto 5) & std_logic_vector(to_unsigned(rs2, 5)) & std_logic_vector(to_unsigned(rs1, 5)) & funct3 & offset(4 downto 1) & offset(11) & opcode;
         load_inst(inst, signals);
     end procedure bltu;
@@ -509,7 +509,7 @@ package body getto_compiler is
         variable inst       : std_logic_vector(31 downto 0);
         variable offset    : std_logic_vector(12 downto 1);
     begin
-        offset := std_logic_vector(to_unsigned(imm, 12));
+        offset := std_logic_vector(to_signed(imm, 12));
         inst := offset(12) & offset(10 downto 5) & std_logic_vector(to_unsigned(rs2, 5)) & std_logic_vector(to_unsigned(rs1, 5)) & funct3 & offset(4 downto 1) & offset(11) & opcode;
         load_inst(inst, signals);
     end procedure bgeu;

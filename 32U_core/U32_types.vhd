@@ -6,7 +6,7 @@ package u32_types is
     -- set bit length of architecture
     constant xlen			: natural := 31;
 
-    -- opcode suffix, always 11 for rx32i architectures
+    -- opcode suffix, always 11 for RV32I architectures
     constant suffix : std_logic_vector(1 downto 0) := "11";
 
     -- size of ram in bytes (should be a power of 2 e.g. 256, 512, 1024, etc)
