@@ -14,7 +14,7 @@ entity u32_inst_fetch is
 end u32_inst_fetch;
     
 architecture rtl of u32_inst_fetch is
-    constant increment      : std_logic_vector(xlen downto 0)   := ((xlen downto 1 => '0') & '1');
+    constant increment      : std_logic_vector(xlen downto 0)   := ((xlen downto 3 => '0') & "100");
     constant inst_mem_xlen  : natural                           := ((inst_mem_size / 4) - 1);
 
     type ram is array (0 to inst_mem_xlen) of word_vector;
@@ -22,9 +22,13 @@ architecture rtl of u32_inst_fetch is
     signal pc_reg_in, pc_reg_out, inst_reg  : word_vector   := (others => '0');
     signal inst_ram                         : ram           := (others => (others => '0'));
     signal clk_en                           : std_logic     := '0';
+    signal true_write_addr, true_read_addr  : natural;
 begin
     -- concurrent statements (read)
-    inst_reg <= inst_ram(to_integer(unsigned(pc_reg_out)));
+    true_read_addr <= to_integer(unsigned(pc_reg_out)) / 4;
+    true_write_addr <= to_integer(unsigned(write_addr)) / 4;
+
+    inst_reg <= inst_ram(true_read_addr);
 
     pc_reg_in <=    new_pc when pc_src = '1' else
                     pc_reg_out + increment;
@@ -42,7 +46,7 @@ begin
                 count := count + 1;
             end if;
             if write_en = '1' then
-                inst_ram(to_integer(unsigned(write_addr))) <= write_inst;
+                inst_ram(true_write_addr) <= write_inst;
             end if;
         elsif falling_edge(clk) then
             if clk_en = '1' then

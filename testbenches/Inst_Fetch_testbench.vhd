@@ -50,7 +50,7 @@ begin
             
             wait for 1 ps;
 
-            expected := x"0000003F" - current_pc;
+            expected := x"000000FC" - current_pc;
 
             assert (pc_out = current_pc)
             report "Unexcpected PC: " &
@@ -68,15 +68,15 @@ begin
             if source = '1' then
                 current_pc <= jump;
             else
-                current_pc  <= current_pc + x"00000001";
+                current_pc  <= current_pc + x"00000004";
             end if;
         end procedure test;
         
         procedure fill_inst_mem is begin
             for i in 0 to 63 loop
                 write_en <= '1';
-                write_inst <= std_logic_vector(to_unsigned(i, 32));
-                write_addr <= std_logic_vector(to_unsigned((63 - i), 32));
+                write_inst <= std_logic_vector(to_unsigned(i * 4, 32));
+                write_addr <= std_logic_vector(to_unsigned((63 - i) * 4, 32));
 
                 wait for clock_delay;
                 clk <= '1';
@@ -92,13 +92,13 @@ begin
             "expected = 0x00000000; "
             severity error;
 
-            assert (inst = x"0000003F")
+            assert (inst = x"000000FC")
             report "Unexcpected result: " &
             "inst = 0x" & to_hex_string(inst) & "; " &
-            "expected = 0x0000003F; "
+            "expected = 0x000000FC; "
             severity error;
 
-            current_pc  <= current_pc + x"00000001";
+            current_pc  <= current_pc + x"00000004";
 		end procedure fill_inst_mem;
     begin
         -- test vectors set based on data mem size of 256B
@@ -106,7 +106,7 @@ begin
 
         test(x"00000000", '0');
         test(x"00000000", '0');
-        test(x"00000023", '1');
+        test(x"00000024", '1');
         test(x"00000000", '0');
 		wait for 10 ns;
 		wait;

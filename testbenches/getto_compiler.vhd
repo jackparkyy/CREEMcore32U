@@ -332,7 +332,7 @@ package body getto_compiler is
         wait for clock_delay;
         signals(65) <= '0';
 
-        signals(31 downto 0) <= signals(31 downto 0) + x"00000001";
+        signals(31 downto 0) <= signals(31 downto 0) + x"00000004";
     end procedure load_inst;
 
     procedure run(
