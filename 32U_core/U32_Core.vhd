@@ -57,7 +57,7 @@ begin
         inst => inst,
         pc_out => pc_if_d,
         next_pc_out => next_pc_if_d,
-        clk_en_out => clk_en
+        clk_en => clk_en
     );
 
     -- instantiate decode pipeline stage

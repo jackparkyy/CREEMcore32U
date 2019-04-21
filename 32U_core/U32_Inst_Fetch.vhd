@@ -9,7 +9,7 @@ entity u32_inst_fetch is
         clk, write_en, pc_src           : in std_logic      := '0';
         write_inst, write_addr, new_pc  : in word_vector    := (others => '0');
         inst, pc_out, next_pc_out       : out word_vector   := (others => '0');
-        clk_en_out                      : out std_logic     := '0'
+        clk_en                          : out std_logic     := '0'
     );
 end u32_inst_fetch;
     
@@ -19,21 +19,18 @@ architecture rtl of u32_inst_fetch is
 
     type ram is array (0 to inst_mem_xlen) of word_vector;
 
-    signal pc_reg_in, pc_reg_out, inst_reg  : word_vector   := (others => '0');
+    signal next_pc, pc, inst_reg            : word_vector   := (others => '0');
     signal inst_ram                         : ram           := (others => (others => '0'));
-    signal clk_en                           : std_logic     := '0';
-    signal true_write_addr, true_read_addr  : natural;
+    signal true_write_addr, true_read_addr  : natural       := 0;
 begin
     -- concurrent statements (read)
-    true_read_addr <= to_integer(unsigned(pc_reg_out)) / 4;
+    true_read_addr <= to_integer(unsigned(pc)) / 4;
     true_write_addr <= to_integer(unsigned(write_addr)) / 4;
 
     inst_reg <= inst_ram(true_read_addr);
 
-    pc_reg_in <=    new_pc when pc_src = '1' else
-                    pc_reg_out + increment;
-
-    clk_en_out <= clk_en;
+    next_pc <=    new_pc when pc_src = '1' else
+                    pc + increment;
 
     -- sequential statements
     process (clk)
@@ -50,9 +47,9 @@ begin
             end if;
         elsif falling_edge(clk) then
             if clk_en = '1' then
-                pc_reg_out <= pc_reg_in;
-                pc_out <= pc_reg_out;
-                next_pc_out <= pc_reg_out + increment;
+                pc <= next_pc;
+                pc_out <= pc;
+                next_pc_out <= pc + increment;
                 inst <= inst_reg;
             end if;
         end if;
