@@ -13,7 +13,8 @@ end u32_controller;
 architecture rtl of u32_controller is
     
 begin
-    -- concurrent statements
+	-- concurrent statements
+	-- decode control signals
     with opcode select 
 	control <=  "100001000"	when lui,
 				"100010000"	when auipc,
@@ -23,5 +24,5 @@ begin
 				"000011010"	when branch,
 				"110110100"	when load,
 				"001011100"	when store,
-				"100100000"	when others; --opimm
+				"100100000"	when others; -- opimm
 end rtl;

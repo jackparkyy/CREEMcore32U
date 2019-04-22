@@ -11,12 +11,15 @@ entity u32_data_extender is
 end u32_data_extender;
 
 architecture rtl of u32_data_extender is
-    
+    constant lb   : std_logic_vector(2 downto 0) := "000";
+    constant lh   : std_logic_vector(2 downto 0) := "001";
+    constant lbu   : std_logic_vector(2 downto 0) := "100";
+    constant lhu   : std_logic_vector(2 downto 0) := "101";
 begin
     with funct select
-    oper_out <= (xlen downto 7 => oper(7)) & oper(6 downto 0) when "000",
-                (xlen downto 15 => oper(15)) & oper(14 downto 0) when "001",
-                (xlen downto 8 => '0') & oper(7 downto 0) when "100",
-                (xlen downto 16 => '0') & oper(15 downto 0) when "101",
-                oper when others;
+    oper_out <= (xlen downto 7 => oper(7)) & oper(6 downto 0) when lb, -- sign extend byte
+                (xlen downto 15 => oper(15)) & oper(14 downto 0) when lh, -- sign extend half word
+                (xlen downto 8 => '0') & oper(7 downto 0) when lbu, -- zero extend byte
+                (xlen downto 16 => '0') & oper(15 downto 0) when lhu, -- zero extend half word
+                oper when others; -- passthrough
 end rtl;

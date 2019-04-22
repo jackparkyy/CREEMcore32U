@@ -20,15 +20,18 @@ architecture rtl of u32_inst_fetch is
     type ram is array (0 to inst_mem_xlen) of word_vector;
 
     signal next_pc, pc, inst_reg            : word_vector   := (others => '0');
-    signal inst_ram                         : ram           := (others => (others => '0'));
+    signal inst_mem                         : ram           := (others => (others => '0'));
     signal true_write_addr, true_read_addr  : natural       := 0;
 begin
-    -- concurrent statements (read)
+    -- concurrent statements
+    -- convert byte address into word address
     true_read_addr <= to_integer(unsigned(pc)) / 4;
     true_write_addr <= to_integer(unsigned(write_addr)) / 4;
 
-    inst_reg <= inst_ram(true_read_addr);
+    -- read instruction out of instruction memory
+    inst_reg <= inst_mem(true_read_addr);
 
+    -- update program counter
     next_pc <=    new_pc when pc_src = '1' else
                     pc + increment;
 
@@ -37,15 +40,19 @@ begin
         variable count  : natural range 0 to inst_mem_xlen  := 0;
     begin
         if rising_edge(clk) then
+            -- stall pipeline until instruction memory filled
             if count = inst_mem_xlen then
                 clk_en <= '1';
             else 
                 count := count + 1;
             end if;
+
+            -- write instruction into instruction memory
             if write_en = '1' then
-                inst_ram(true_write_addr) <= write_inst;
+                inst_mem(true_write_addr) <= write_inst;
             end if;
         elsif falling_edge(clk) then
+            -- pipeline registers
             if clk_en = '1' then
                 pc <= next_pc;
                 pc_out <= pc;

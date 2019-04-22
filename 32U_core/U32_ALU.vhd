@@ -24,10 +24,11 @@ architecture rtl of u32_alu is
 begin
 	shamt <= operand2(4 downto 0);
 	result <= aluresult;
-	zero <= '1' when aluresult = (xlen downto 0 => '0') else '0';
+	zero <= '1' when aluresult = (xlen downto 0 => '0') else '0'; -- set zero flag high when result is 0
 	
 	process (alu_control, operand1, operand2, shamt)
 	begin
+		-- perform the approiate arithmatic/logic function based on ALU control signal
 		case alu_control is
 			when alu_slt => 
 				if operand1 < operand2 then

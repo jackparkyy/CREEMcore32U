@@ -16,8 +16,9 @@ architecture rtl of u32_immediate_decoder is
 begin
     opcode <= inst(6 downto 2); -- isolate opcode from instrcution
     
+    -- decode immediate
     with opcode select 
-    imm <=  inst(xlen downto 12) & (11 downto 0 => '0')                                               when lui | auipc, -- U-type
+    imm <=  inst(xlen downto 12) & (11 downto 0 => '0')                                                 when lui | auipc, -- U-type
             (xlen downto 20 => inst(xlen)) & inst(19 downto 12) & inst(20) & inst(30 downto 21) & '0'   when jal, -- J-type
             (xlen downto 12 => inst(xlen)) & inst(7) & inst(30 downto 25) & inst(11 downto 8) & '0'     when branch, -- B-type
             (xlen downto 11 => inst(xlen)) & inst(30 downto 25) & inst(11 downto 7)                     when store, -- S-type

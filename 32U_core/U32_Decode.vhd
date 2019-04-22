@@ -53,6 +53,7 @@ begin
     -- sequential statements
     process begin
         wait until falling_edge(clk);
+        -- pipeline registers
         if clk_en = '1' then
             control <= control_reg;
             funct <= inst(30) & inst(14 downto 12);

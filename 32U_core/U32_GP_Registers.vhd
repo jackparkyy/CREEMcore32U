@@ -20,7 +20,6 @@ begin
     -- concurrent statements (read)
     rs1_data <= gp_registers(to_integer(unsigned(rs1_addr)));
     rs2_data <= gp_registers(to_integer(unsigned(rs2_addr)));
-
     -- sequential statements (write)
     process begin
         wait until rising_edge(clk);

@@ -25,6 +25,13 @@ begin
     write_en <= control(2);
     read_en <= control(3);
 
+    -- control source of data into funct/rdd pipeline register (multiplexer)
+    with wbsrc select 
+    funct_rdd_reg <=    addr_const when "00",
+                        add_result when "01",
+                        alu_result when "10",
+                        (31 downto 4 => '0') & funct when others;
+
     -- instantiate data memory
 	u32_data_memory : entity work.u32_data_memory
 	port map (
@@ -36,12 +43,6 @@ begin
 		write_data => alu_result,
 		read_data => oper_reg
     );
-    
-    with wbsrc select 
-    funct_rdd_reg <=    addr_const when "00",
-                        add_result when "01",
-                        alu_result when "10",
-                        (31 downto 4 => '0') & funct when others;
     
     -- sequential statements
     process begin

@@ -17,13 +17,13 @@ architecture rtl of u32_alu_controller is
 	subtype aluop_vector is std_logic_vector(1 downto 0);
 	subtype alu_inst_vector is std_logic_vector(5 downto 0);
 
-	-- aluop
+	-- define aluop
 	constant branch_aluop   : aluop_vector := "10";
 	constant store_aluop    : aluop_vector := "11";
 	constant opimm_aluop    : aluop_vector := "00";
 	constant op_aluop       : aluop_vector := "01";
 
-	-- instructions that use the ALU
+	-- define instructions that use the ALU
 	constant beq_inst0		: alu_inst_vector := branch_aluop & "0000";
 	constant beq_inst1		: alu_inst_vector := branch_aluop & "1000";
 	constant bne_inst0		: alu_inst_vector := branch_aluop & "0001";
@@ -75,8 +75,9 @@ architecture rtl of u32_alu_controller is
 
 -- concurrent statements
 begin
-	inst_alu <= aluop & funct;
+	inst_alu <= aluop & funct; -- cobined aluop and funct so with/select can be used
 
+	-- decode alu control signal
 	with inst_alu select 
 	alu_control <=  alu_slt		when blt_inst1  | bge_inst1  | slti_inst1 | blt_inst0  | bge_inst0  | slti_inst0  | slt_inst,
 					alu_sltu	when bltu_inst1 | bgeu_inst1 | sltiu_inst1 | bltu_inst0 | bgeu_inst0 | sltiu_inst0 | sltu_inst,

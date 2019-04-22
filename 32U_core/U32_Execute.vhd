@@ -34,12 +34,16 @@ begin
     addrsrc_alusrc <= control(3);
     aluop1 <= control(4);
 
+    -- connect add_result directly to output pin. Perminalteley set bit 0 to 0 as jump and branch
+    -- should only increment the proghram counter in multiples of two bytes
     add_result_out <= add_result_reg(xlen downto 1) & '0';
 
+    -- control source of operands into ALU, Add unit and addr/const pipeline register (multiplexers) 
     operand2 <= rs2d when addrsrc_alusrc = '1' else imm;
     addoperand2 <= rs1d when addsrc_aluop0 = '1' else pc;
     addr_const_reg <= imm when addrsrc_alusrc = '1' else next_pc;
 
+    -- Add unit
     add_result_reg <= imm + addoperand2;
 
     -- instantiate ALU
@@ -60,7 +64,7 @@ begin
 		alu_control => alu_control
     );
 
-    -- instantiate Branch
+    -- instantiate Branch controller
     u32_branch_controller : entity work.u32_branch_controller
     port map (
         jump => jump,

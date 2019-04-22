@@ -32,15 +32,18 @@ begin
 		procedure test_read(
 			constant address, expected	: in std_logic_vector(31 downto 0)
 		) is begin
+			-- assign values to circuit inputs
 			addr <= address;
 			read_en <= '1';
 			write_en <= '0';
 
+			-- cycle clock
 			wait for clock_delay;
 			clk <= '1';
 			wait for clock_delay;
 			clk <= '0';
 
+			-- log any unexpected outputs
 			assert read_data = expected
 			report "Unexpected data: " &
 			"data = 0x" & to_hex_string(read_data) & "; " &

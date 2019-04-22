@@ -15,7 +15,8 @@ end u32_branch_controller;
 architecture rtl of u32_branch_controller is
 -- concurrent statements
 begin
-	pc_src <=    '1' when jump = '1' else
+    -- set pc_src high when jump or branch + condition met
+	pc_src <=   '1' when jump = '1' else
                 '1' when branch & zero & funct = "11000" else -- BEQ and equal
                 '1' when branch & zero & funct = "10001" else -- BNE and not equal
                 '1' when branch & zero & funct = "10100" else -- BLT and less than

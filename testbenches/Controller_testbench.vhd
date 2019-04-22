@@ -29,8 +29,10 @@ begin
 			-- assign values to circuit inputs
 			opcode <= operation;
 				
+			-- wait for controller to respond
 			wait for time_delta;
 
+			-- log any unexpted outputs
 			assert control = expected
 			report "Unexpected result: " &
 			"operation = " & to_string(operation) & "; " &
