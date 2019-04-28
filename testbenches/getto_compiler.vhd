@@ -4,7 +4,7 @@ use ieee.std_logic_unsigned.all;
 use ieee.numeric_std.all;
 
 package getto_compiler is
-    constant clock_delay	: time := 20 ns;
+    constant clock_delay	: time := 10 ns;
 
     subtype reg_addr is natural range 0 to 31;
     subtype i_imm is integer range -2048 to 2047;
@@ -323,23 +323,27 @@ package body getto_compiler is
 
         signal signals  : out std_logic_vector(65 downto 0)
     ) is begin
-        signals(64) <= '1';
-        signals(63 downto 32) <= inst;
-        --report "laoded inst (" & to_string(inst) & ")" severity note;
+        signals(64) <= '1'; -- set instruction memory write enable high
+        signals(63 downto 32) <= inst; -- write instruction into instruction memory
 
+        -- cycle clock
         wait for clock_delay;
         signals(65) <= '1';
         wait for clock_delay;
         signals(65) <= '0';
 
+        -- increment write address for instruction memory
         signals(31 downto 0) <= signals(31 downto 0) + x"00000004";
     end procedure load_inst;
 
     procedure run(
         signal signals  : out std_logic_vector(65 downto 0)
     ) is begin
+        -- stop writing instruction into isntruction memory
         signals(64 downto 0) <= (others => '0');
-        for i in 0 to 66 loop
+
+        -- cycle clock 
+        for i in 0 to 69 loop
             wait for clock_delay;
             signals(65) <= '1';
             wait for clock_delay;

@@ -112,7 +112,7 @@ begin
 		procedure test(
 			constant instruction, data	: in std_logic_vector(31 downto 0);
             constant address            : in std_logic_vector(4 downto 0);
-            constant regwrite           : in std_logic
+            constant regwrite, en_clk   : in std_logic
 		) is
 			
 		begin		
@@ -122,8 +122,11 @@ begin
             rd_data <= data;
 			rd_addr <= address;
             inst <=  instruction(31 downto 2);
-			current_pc <= next_pc_out;
-			clk_en <= '1';
+			clk_en <= en_clk;
+
+			if en_clk = '1' then
+				current_pc <= next_pc_out;
+			end if;
 
 			wait for clock_delay;
 			clk <= '1';
@@ -131,17 +134,20 @@ begin
 			clk <= '0';
 
 			wait for 1 ps;
-			assert (pc_out = current_pc and next_pc_out = (current_pc + x"00000004"))
-			report "Unexcpected PC: " &
-			"pc_out = 0x" & to_hex_string(pc_out) & "; " &
-			"current_pc = 0x" & to_hex_string(current_pc) & "; "
-			severity error;
 
-			assert check_control(instruction(6 downto 2), control)
-			report "Unexcpected Control: " &
-			"pc_out = 0x" & to_hex_string(pc_out) & "; " &
-			"current_pc = 0x" & to_hex_string(current_pc) & "; "
-			severity error;
+			if (en_clk = '1') and (current_pc > x"00000004") then
+				assert (pc_out = current_pc and next_pc_out = (current_pc + x"00000004"))
+				report "Unexcpected PC: " &
+				"pc_out = 0x" & to_hex_string(pc_out) & "; " &
+				"current_pc = 0x" & to_hex_string(current_pc) & "; "
+				severity error;
+
+				assert check_control(instruction(6 downto 2), control)
+				report "Unexcpected Control: " &
+				"pc_out = 0x" & to_hex_string(pc_out) & "; " &
+				"current_pc = 0x" & to_hex_string(current_pc) & "; "
+				severity error;
+			end if;
 
 			report "Tested inst: " &
 			"rs1d = 0x" & to_hex_string(rs1d) & "; " &
@@ -152,10 +158,12 @@ begin
 			severity note;
 		end procedure test;
 	begin
-		test(x"401000B3", x"FFFFFFFF", "00001", '1');
-		test(x"401000B3", x"00000000", "00001", '0');
-		test(x"401000B3", x"00000000", "00001", '1');
-		test(x"401000B3", x"FFFFFFFF", "00000", '1');
+		-- test pipeline registers are disabled unless clk_en is set high
+		test(x"FFFFFFFF", x"00000000", "00000", '0', '0');
+		-- write into register x1 and test U-Type immediates decode
+		test(x"401120B7", x"FFFFFFFF", "00001", '1', '1');
+		-- write into register x2
+		test(x"401120B3", x"FFFFFFFF", "00010", '1', '1');
 		wait for 10 ns;
 		wait;
 	end process;

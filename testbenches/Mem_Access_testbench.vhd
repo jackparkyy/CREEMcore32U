@@ -65,7 +65,7 @@ begin
             severity error;
         end procedure test;
 
-        procedure test_lui is
+        procedure test_lui_jal_jalr is
             constant inst_type : string := "LUI";
         begin
             control <= "10000";
@@ -76,7 +76,7 @@ begin
 			"funct_rdd = " & to_hex_string(funct_rdd) & "; " &
 			"expected = 0x55555555; "
 			severity error;
-        end procedure test_lui;
+        end procedure test_lui_jal_jalr;
 
         procedure test_auipc is
             constant inst_type : string := "AUIPC";
@@ -122,7 +122,7 @@ begin
             test(passed_alu_result, passed_add_result, x"55555555", "1110", inst_type);
         end procedure test_store;
 
-        procedure test_op is
+        procedure test_op_opimm is
             constant inst_type : string := "OP";
         begin
             control <= "10010";
@@ -133,22 +133,19 @@ begin
 			"funct_rdd = " & to_hex_string(funct_rdd) & "; " &
 			"expected = 0xFFFFFFFF; "
 			severity error;
-        end procedure test_op;
+        end procedure test_op_opimm;
     begin
-        test_lui;
+        test_lui_jal_jalr; -- check the addr_const is propgated output of funct_rdd
 
-        test_auipc;
+        test_auipc; -- check the add_result is propgated output of funct_rdd
 
-        test_op;
+        test_op_opimm; -- check the alu_result is propgated output of funct_rdd
 
-        test_load(x"00000000", x"00000000");
-        test_load(x"00000004", x"00000000");
+        test_load(x"00000004", x"00000000"); -- check no data stored in byte address 4
 
-        test_store(x"00000000", x"44444444");
-        test_store(x"00000004", x"AAAAAAAA");
+        test_store(x"00000004", x"AAAAAAAA"); -- store data in byte address 4
 
-        test_load(x"00000000", x"44444444");
-        test_load(x"00000004", x"AAAAAAAA");
+        test_load(x"00000004", x"AAAAAAAA"); -- check data stored in byte address 4
         wait for 10 ns;
 		wait;
 	end process;

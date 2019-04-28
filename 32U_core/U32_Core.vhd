@@ -6,7 +6,7 @@ entity u32_core is
     port (
         clk, write_en                               : in std_logic      := '0';
         write_inst, write_addr                      : in word_vector    := (others => '0');
-        rd_data_out, imm_out, rs1d_out, rs2d_out,
+        rd_data_out, addr_const_out,
         alu_result_out, add_result_out, new_pc_out  : out word_vector   := (others => '0');
         rd_addr_out                                 : out addr_vector   := (others => '0');
         reg_write_out, pc_src_out                   : out std_logic     := '0'
@@ -142,9 +142,7 @@ begin
     );
 
 
-    imm_out <= imm;
-    rs1d_out <= rs1d;
-    rs2d_out <= rs2d;
+    addr_const_out <= addr_const;
     alu_result_out <= alu_result;
     add_result_out <= add_result;
     new_pc_out <= new_pc;

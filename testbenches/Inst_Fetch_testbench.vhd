@@ -105,7 +105,6 @@ begin
         fill_inst_mem;
 
         test(x"00000000", '0');
-        test(x"00000000", '0');
         test(x"00000024", '1');
         test(x"00000000", '0');
 		wait for 10 ns;

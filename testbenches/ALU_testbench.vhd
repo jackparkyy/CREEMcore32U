@@ -176,6 +176,7 @@ begin
 			test(operation, value1, value2, expected);
 		end procedure test_pass;
 	begin
+		-- (operand1, operand2, expected)
 		test_add(0, 0, 0);
 		test_add(10, 10, 20);
 		test_add(-10, -10, -20);
