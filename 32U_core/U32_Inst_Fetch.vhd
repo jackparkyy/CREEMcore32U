@@ -4,6 +4,7 @@ use ieee.std_logic_unsigned.all;
 use ieee.numeric_std.all;
 use work.u32_types.all;
 
+-- define the interface between the instruction fetch pipeline stage and its external environment
 entity u32_inst_fetch is
     port (
         clk, write_en, pc_src           : in std_logic      := '0';
@@ -13,6 +14,7 @@ entity u32_inst_fetch is
     );
 end u32_inst_fetch;
     
+-- define the internal organisation and operation of the instruction fetch pipeline stage
 architecture rtl of u32_inst_fetch is
     constant increment      : std_logic_vector(xlen downto 0)   := ((xlen downto 3 => '0') & "100");
     constant inst_mem_xlen  : natural                           := ((inst_mem_size / 4) - 1);

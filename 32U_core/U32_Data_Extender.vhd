@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use work.u32_types.all;
 
+-- define the interface between the data extender and its external environment
 entity u32_data_extender is
 	port (
         funct       : in std_logic_vector(2 downto 0)   := (others => '0');
@@ -10,6 +11,7 @@ entity u32_data_extender is
 	);
 end u32_data_extender;
 
+-- define the internal organisation and operation of the data extender
 architecture rtl of u32_data_extender is
     constant lb   : std_logic_vector(2 downto 0) := "000";
     constant lh   : std_logic_vector(2 downto 0) := "001";

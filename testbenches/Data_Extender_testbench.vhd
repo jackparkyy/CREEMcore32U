@@ -5,6 +5,7 @@ use ieee.std_logic_signed.all;
 entity data_extender_testbench is
 end data_extender_testbench;
 
+-- define the internal organisation and operation of the data extender testbench
 architecture behaviour of data_extender_testbench is
 	-- architecture declarations
 	constant time_delta	: time := 100 ns;

@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use work.u32_types.all;
 
+-- define the interface between the pipeline controller and its external environment
 entity u32_controller is
     port(
         opcode  : in opcode_vector := (others => '0');
@@ -9,7 +10,7 @@ entity u32_controller is
     );
 end u32_controller;
 
--- define the internal organisation and operation of the general purpose registers
+-- define the internal organisation and operation of the pipeline controller
 architecture rtl of u32_controller is
     
 begin

@@ -3,6 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_signed.all;
 use work.u32_types.all;
 
+-- define the interface between the execute pipeline stage and its external environment
 entity u32_execute is
     port(
         clk, clk_en                     : in std_logic                      := '0';
@@ -18,7 +19,7 @@ entity u32_execute is
     );
 end u32_execute;
 
--- define the internal organisation and operation of the decode pipeline stage
+-- define the internal organisation and operation of the execute pipeline stage
 architecture rtl of u32_execute is
     signal jump, branch, addsrc_aluop0,
             addrsrc_alusrc, aluop1, zero  : std_logic     := '0';

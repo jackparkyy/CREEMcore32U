@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use work.u32_types.all;
 
+-- define the interface between the write back pipeline stage and its external environment
 entity u32_writeback is
     port(
         control             : in std_logic_vector(1 downto 0)   := (others => '0');
@@ -13,6 +14,7 @@ entity u32_writeback is
     );
 end u32_writeback;
 
+-- define the internal organisation and operation of the write back pipeline stage
 architecture rtl of u32_writeback is
     signal oper_out : word_vector := (others => '0');
 begin

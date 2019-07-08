@@ -2,11 +2,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_signed.all;
 
--- define the interface between the alu and its external environment
 entity immediate_decoder_testbench is
 end immediate_decoder_testbench;
 
--- define the internal organisation and operation of the alu
+-- define the internal organisation and operation of the immediate decoder testbench
 architecture behaviour of immediate_decoder_testbench is
 	-- architecture declarations
 	constant time_delta	: time := 100 ns;

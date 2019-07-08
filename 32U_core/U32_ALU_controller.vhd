@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use work.u32_types.all;
 
--- define the interface between the alu and its external environment
+-- define the interface between the alu controller and its external environment
 entity u32_alu_controller is
 	port (
 		aluop	: in std_logic_vector(1 downto 0) := (others => '0');
@@ -11,7 +11,7 @@ entity u32_alu_controller is
 	);
 end u32_alu_controller;
 
--- define the internal organisation and operation of the alu
+-- define the internal organisation and operation of the alu controller
 architecture rtl of u32_alu_controller is
 	-- architecture declarations
 	subtype aluop_vector is std_logic_vector(1 downto 0);

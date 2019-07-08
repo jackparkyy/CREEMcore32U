@@ -3,11 +3,10 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.std_logic_signed.all;
 
--- define the interface between the alu and its external environment
 entity alu_testbench is
 end alu_testbench;
 
--- define the internal organisation and operation of the alu
+-- define the internal organisation and operation of the alu testbench
 architecture behaviour of alu_testbench is
 	-- architecture declarations
 	constant time_delta	: time := 100 ns;

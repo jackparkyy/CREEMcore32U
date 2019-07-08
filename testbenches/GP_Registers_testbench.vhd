@@ -2,11 +2,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
--- define the interface between the alu and its external environment
 entity gp_registers_testbench is
 end gp_registers_testbench;
 
--- define the internal organisation and operation of the alu
+-- define the internal organisation and operation of the general-purpose register testbench
 architecture behaviour of gp_registers_testbench is
 	-- architecture declarations
 	constant clock_delay	: time := 50 ns;

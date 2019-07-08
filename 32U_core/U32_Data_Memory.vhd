@@ -3,6 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.u32_types.all;
 
+-- define the interface between the data memory and its external environment
 entity u32_data_memory is
     port (
         clk, write_en, read_en  : in std_logic := '0';
@@ -12,6 +13,7 @@ entity u32_data_memory is
     );
 end u32_data_memory;
     
+-- define the internal organisation and operation of the data memory
 architecture behavioral of u32_data_memory is
     -- define array
     type byte_ram is array (0 to (data_mem_size - 1)) of byte_vector;

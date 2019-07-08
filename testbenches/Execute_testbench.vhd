@@ -2,11 +2,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 
--- define the interface between the alu and its external environment
 entity execute_testbench is
 end execute_testbench;
 
--- define the internal organisation and operation of the alu
+-- define the internal organisation and operation of the execute pipeline stage testbench
 architecture behaviour of execute_testbench is
 	-- architecture declarations
 	constant clock_delay	: time := 50 ns;

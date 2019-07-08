@@ -1,11 +1,10 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
--- define the interface between the alu and its external environment
 entity alu_controller_testbench is
 end alu_controller_testbench;
 
--- define the internal organisation and operation of the alu
+-- define the internal organisation and operation of the alu controller testbench
 architecture behaviour of alu_controller_testbench is
     -- architecture declarations
     constant time_delta	: time := 100 ns;

@@ -3,11 +3,10 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 use ieee.numeric_std.all;
 
--- define the interface between the instruction fetch pipeline stage and its external environment
 entity inst_fetch_testbench is
 end inst_fetch_testbench;
 
--- define the internal organisation and operation of the instruction fetch pipeline stage
+-- define the internal organisation and operation of the instruction fetch pipeline stage testbench
 architecture behaviour of inst_fetch_testbench is
     -- architecture declarations
     constant clock_delay	: time := 50 ns;

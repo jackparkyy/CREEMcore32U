@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use work.u32_types.all;
 
+-- define the interface between the branch controller and its external environment
 entity u32_core is
     port (
         clk, write_en                               : in std_logic      := '0';

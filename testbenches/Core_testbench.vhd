@@ -2,11 +2,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use work.getto_compiler.all;
 
--- define the interface between the core and its external environment
 entity core_testbench is
 end core_testbench;
 
--- define the internal organisation and operation of the core
+-- define the internal organisation and operation of the core testbench
 architecture behaviour of core_testbench is
 	-- architecture declarations
     signal clk, write_en, reg_write, pc_src : std_logic                     := '0';

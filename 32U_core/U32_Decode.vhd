@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use work.u32_types.all;
 
+-- define the interface between the decode pipeline stage and its external environment
 entity u32_decode is
     port(
         clk, clk_en, reg_write                  : in std_logic                      := '0';

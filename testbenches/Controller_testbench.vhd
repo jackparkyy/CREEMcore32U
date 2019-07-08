@@ -4,6 +4,7 @@ use ieee.std_logic_1164.all;
 entity controller_testbench is
 end controller_testbench;
 
+-- define the internal organisation and operation of the pipeline controller testbench
 architecture behaviour of controller_testbench is
     -- architecture declarations
     constant time_delta	: time := 100 ns;

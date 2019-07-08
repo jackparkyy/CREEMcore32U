@@ -3,6 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.u32_types.all;
 
+-- define the interface between the general-purpose registers and its external environment
 entity u32_gp_registers is
     port(
         clk, reg_write              : in std_logic := '0';
@@ -12,7 +13,7 @@ entity u32_gp_registers is
     );
 end u32_gp_registers;
 
--- define the internal organisation and operation of the general purpose registers
+-- define the internal organisation and operation of the general-purpose registers
 architecture rtl of u32_gp_registers is
     type word_matrix is array (0 to 31) of word_vector;
     signal gp_registers : word_matrix := (others => (others => '0'));

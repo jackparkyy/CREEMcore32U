@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use work.u32_types.all;
 
--- define the interface between the alu and its external environment
+-- define the interface between the branch controller and its external environment
 entity u32_branch_controller is
 	port (
 		zero, branch, jump	: in std_logic := '0';
@@ -11,7 +11,7 @@ entity u32_branch_controller is
 	);
 end u32_branch_controller;
 
--- define the internal organisation and operation of the alu
+-- define the internal organisation and operation of the branch controller
 architecture rtl of u32_branch_controller is
 -- concurrent statements
 begin
